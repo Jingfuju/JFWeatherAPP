@@ -34,7 +34,7 @@ class WeatherView: UIView {
         self.weatherDescriptionLabel.text = viewModel.weatherDescriptionLabelText
         
         animate(label: temperatureLabel, with: viewModel.temperatureLabelText, options: .curveEaseIn)
-        weatherImage.loadImageWithUrl(URL(string:viewModel.weatherImageURLString)!)
+        weatherImage.loadImageWithURL(URL(string:viewModel.weatherImageURLString)!)
     }
     
     private func animate(

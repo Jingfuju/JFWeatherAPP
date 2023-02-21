@@ -7,6 +7,67 @@
 
 import Foundation
 
+protocol ErrorProtocol: LocalizedError {
+    var title: String? { get }
+    var code: Int { get }
+}
+
+struct NetworkError: ErrorProtocol {
+    var title: String?
+    var code: Int
+    var errorDescription: String? { return _description }
+    var failureReason: String? { return _description }
+
+    private var _description: String
+
+    init(title: String?, description: String, code: Int) {
+        self.title = title ?? "Error"
+        _description = description
+        self.code = code
+    }
+}
+
+enum Error: Swift.Error, LocalizedError {
+    case badUrl
+    case network
+    case dataCorrupted
+    case apiKeyIsMissing
+
+    case other(String)
+
+    var errorDescription: String? {
+        localizedDescription
+    }
+
+    var localizedDescription: String {
+        switch self {
+        case .badUrl:
+            return "Wrong city"
+
+        case .network:
+            return "Network error"
+
+        case .dataCorrupted:
+            return "Invalid data format"
+
+        case .apiKeyIsMissing:
+            return "Insert your API key"
+
+        case let .other(message):
+            return message
+        }
+    }
+}
+
+
+struct NetworkHelperConstants {
+    static let baseURLString = String(describing: AppUtility.infoForKey(for: "WEATHER_BASE_URL")).trimmingCharacters(in: .whitespacesAndNewlines)
+    static let weatherURLString = baseURLString + "weather"
+    static let imageURLString = "https://openweathermap.org/img/wn/"
+    static let weatherAPIKey = String(describing: AppUtility.infoForKey(for: "WEATHER_API_KEY")).trimmingCharacters(in: .whitespacesAndNewlines)
+}
+
+
 protocol NetworkServiceProtocol {
     func startNetworkTask(urlStr: String, params: [String: String], resultHandler: @escaping (Result<Data?, Error>) -> Void)
 }

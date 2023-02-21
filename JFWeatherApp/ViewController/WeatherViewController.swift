@@ -19,6 +19,16 @@ class WeatherViewController: UIViewController {
     var currentLocation: CLLocation!
     var weatherViewModel: WeatherViewModel?
     let searchBarContainerView: SearchBarContainerView = .fromNib()
+    
+    // MARK: - UI
+    
+    private lazy var noDataView: NoDataView = {
+        let noDataView: NoDataView = Bundle.main.loadNibNamed("NoDataView", owner: self, options: nil)?.first as! NoDataView
+        noDataView.center = view.center
+        noDataView.setupSelectLocatin()
+        return noDataView
+    }()
+
 
     // MARK: - Lift Cycle
 
@@ -30,8 +40,6 @@ class WeatherViewController: UIViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         requestLocationAccess()
     }
-
-    // MARK: - Setup UI , Reload and Observer Binding
 
     func setupView() {
         
@@ -62,9 +70,10 @@ class WeatherViewController: UIViewController {
         Reachability.shared.startMonitoring()
         //        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(_:)), name:  Reachability.connectionStatusHasChangedNotification, object: nil)
     }
+}
 
-    // MARK: - Error / No Data Handling
-
+// MARK: - Privates
+private extension WeatherViewController {
     private func showAlert(message: String) {
         let alertController = UIAlertController(
             title: AppMessages.AppTitle,
@@ -78,72 +87,14 @@ class WeatherViewController: UIViewController {
         }
     }
 
-    
-    private lazy var noDataView: NoDataView = {
-        let noDataView: NoDataView = Bundle.main.loadNibNamed("NoDataView", owner: self, options: nil)?.first as! NoDataView
-        noDataView.center = view.center
-        noDataView.setupSelectLocatin()
-        return noDataView
-    }()
-
-    
-    func showNoDataView() {
+    private func showNoDataView() {
         view.addSubview(noDataView)
         view.bringSubviewToFront(noDataView)
     }
 
     /// Hide No Data View
-    func hideNoDataView() {
+    private func hideNoDataView() {
         noDataView.removeFromSuperview()
-    }
-}
-
-// MARK: - Weather History Menu
-
-extension WeatherViewController {
-    
-   
-    func createContextMenu() -> UIMenu {
-        var menuList = [UIAction]()
-        guard let historyList = HistoryProvider.readWeatherHistory() else {
-            let noHisotryAction = UIAction(title: AppMessages.NoWeatherHistoryMessage, image: UIImage(systemName: "list.number")) { _ in
-            }
-            return UIMenu(title: AppMessages.WeatherHistoryTitle, image: nil, identifier: .edit, options: .singleSelection, children: [noHisotryAction])
-        }
-
-        menuList = historyList.enumerated().map { index, weather in
-            UIAction(
-                title: weather.name!,
-                identifier: UIAction.Identifier("HistoryMenu\(index + 1)")
-            ) { action in
-                self.weatherViewModel?.weatherModelObserver.value = weather
-            }
-        }
-
-        // Add Clear History Action
-        var removeRatingAttributes = UIMenuElement.Attributes.destructive
-        // enable or disable action based on the count
-        if historyList.count == 0 {
-            removeRatingAttributes.insert(.disabled)
-        }
-        let deleteImage = UIImage(systemName: "trash.fill")
-        let clearHistory = UIAction(
-            title: AppMessages.ClearHistoryTitle,
-            image: deleteImage,
-            identifier: UIAction.Identifier("ClearHisotyr"),
-            attributes: removeRatingAttributes
-        ) { _ in
-            HistoryProvider.clearWeatherHistory()
-            self.searchBarContainerView.searchButton.menu = self.createContextMenu()
-        }
-        menuList.append(clearHistory)
-
-        return UIMenu(
-            title: AppMessages.WeatherHistoryTitle,
-            image: UIImage(systemName: "list.number"),
-            identifier: .edit, options: .singleSelection,
-            children: menuList
-        )
     }
 }
 
@@ -175,6 +126,7 @@ extension WeatherViewController: UITableViewDataSource {
         return cell
     }
 }
+
 
 // MARK: - CLLocationManagerDelegate
 
@@ -361,5 +313,48 @@ extension WeatherViewController {
                 complete(.failure(.other(error.localizedDescription)))
             }
         }
+    }
+    
+    func createContextMenu() -> UIMenu {
+        var menuList = [UIAction]()
+        guard let historyList = HistoryProvider.readWeatherHistory() else {
+            let noHisotryAction = UIAction(title: AppMessages.NoWeatherHistoryMessage, image: UIImage(systemName: "list.number")) { _ in
+            }
+            return UIMenu(title: AppMessages.WeatherHistoryTitle, image: nil, identifier: .edit, options: .singleSelection, children: [noHisotryAction])
+        }
+
+        menuList = historyList.enumerated().map { index, weather in
+            UIAction(
+                title: weather.name!,
+                identifier: UIAction.Identifier("HistoryMenu\(index + 1)")
+            ) { action in
+                self.weatherViewModel?.weatherModelObserver.value = weather
+            }
+        }
+
+        // Add Clear History Action
+        var removeRatingAttributes = UIMenuElement.Attributes.destructive
+        // enable or disable action based on the count
+        if historyList.count == 0 {
+            removeRatingAttributes.insert(.disabled)
+        }
+        let deleteImage = UIImage(systemName: "trash.fill")
+        let clearHistory = UIAction(
+            title: AppMessages.ClearHistoryTitle,
+            image: deleteImage,
+            identifier: UIAction.Identifier("ClearHisotyr"),
+            attributes: removeRatingAttributes
+        ) { _ in
+            HistoryProvider.clearWeatherHistory()
+            self.searchBarContainerView.searchButton.menu = self.createContextMenu()
+        }
+        menuList.append(clearHistory)
+
+        return UIMenu(
+            title: AppMessages.WeatherHistoryTitle,
+            image: UIImage(systemName: "list.number"),
+            identifier: .edit, options: .singleSelection,
+            children: menuList
+        )
     }
 }

@@ -17,7 +17,7 @@ class MyExtendedImage: UIImageView {
 
     /// Download an image from URL with caching
     /// - Parameter url: url of the image to be downloaded
-    func loadImageWithUrl(_ url: URL) {
+    func loadImageWithURL(_ url: URL) {
         // setup Activity Indicator
         activityIndicator.color = .darkGray
         addSubview(activityIndicator)

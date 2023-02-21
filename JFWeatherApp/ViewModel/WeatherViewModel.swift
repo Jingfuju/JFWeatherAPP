@@ -80,7 +80,6 @@ class WeatherViewModel {
         }
         temperatureLabelText = String(format: "%.f°\(tempUnit)", weatherModel.main?.temp ?? 0)
         
-    
         weatherImageURLString =
             "\(NetworkHelperConstants.imageURLString)" +
             "\(weatherModel.weather?.first?.icon ?? "placeholder")" +

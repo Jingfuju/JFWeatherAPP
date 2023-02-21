@@ -53,22 +53,8 @@ extension UIView {
 }
 
 extension UIView {
-    /// Add Shadow to view
-    open func addDropShadow() {
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOffset = CGSize(width: 0.0, height: 2.0)
-        layer.shadowRadius = 6.0
-        layer.shadowOpacity = 0.4
-        layer.masksToBounds = true
-    }
-
-    /// A convenience function to turn off drop shadow
-    open func removeDropShadow() {
-        layer.shadowOpacity = 0
-    }
-
     @discardableResult
-    public class func fromNib<T: UIView>() -> T {
+    class func fromNib<T: UIView>() -> T {
         let name = String(describing: Self.self)
         guard let nib = Bundle(for: Self.self).loadNibNamed(
             name, owner: nil, options: nil

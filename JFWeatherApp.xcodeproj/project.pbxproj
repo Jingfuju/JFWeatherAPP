@@ -24,8 +24,6 @@
 		FE69B569299A52BE0088A1C2 /* MokeWeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69B568299A52BE0088A1C2 /* MokeWeatherViewModel.swift */; };
 		FE8323AF299B52F8000037B5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FE8323AE299B52F7000037B5 /* README.md */; };
 		FE84D8E229953BAD00758E35 /* NetworkServiceProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8E129953BAD00758E35 /* NetworkServiceProvider.swift */; };
-		FE84D8E429953BCA00758E35 /* NetrowkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8E329953BCA00758E35 /* NetrowkError.swift */; };
-		FE84D8E629953BEA00758E35 /* NetworkingConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8E529953BEA00758E35 /* NetworkingConstants.swift */; };
 		FE84D8EC2995408A00758E35 /* AppObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8EB2995408A00758E35 /* AppObserver.swift */; };
 		FE84D8EE299540AB00758E35 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8ED299540AB00758E35 /* Constants.swift */; };
 		FE84D8F62995419700758E35 /* Other.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8F12995419600758E35 /* Other.swift */; };
@@ -75,8 +73,6 @@
 		FE69B568299A52BE0088A1C2 /* MokeWeatherViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MokeWeatherViewModel.swift; sourceTree = "<group>"; };
 		FE8323AE299B52F7000037B5 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FE84D8E129953BAD00758E35 /* NetworkServiceProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProvider.swift; sourceTree = "<group>"; };
-		FE84D8E329953BCA00758E35 /* NetrowkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetrowkError.swift; sourceTree = "<group>"; };
-		FE84D8E529953BEA00758E35 /* NetworkingConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingConstants.swift; sourceTree = "<group>"; };
 		FE84D8EB2995408A00758E35 /* AppObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppObserver.swift; sourceTree = "<group>"; };
 		FE84D8ED299540AB00758E35 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FE84D8F12995419600758E35 /* Other.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Other.swift; sourceTree = "<group>"; };
@@ -261,8 +257,6 @@
 			children = (
 				FE0E08F0299B1E6C00EFD79B /* HistoryProvider.swift */,
 				FE84D8E129953BAD00758E35 /* NetworkServiceProvider.swift */,
-				FE84D8E329953BCA00758E35 /* NetrowkError.swift */,
-				FE84D8E529953BEA00758E35 /* NetworkingConstants.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -462,11 +456,9 @@
 				FE84D8FD2995431B00758E35 /* NoDataView.swift in Sources */,
 				A54A5D2329A51407009D4E15 /* Weather.swift in Sources */,
 				A512F05129A4148600AE62EA /* WeatherViewController.swift in Sources */,
-				FE84D8E429953BCA00758E35 /* NetrowkError.swift in Sources */,
 				A512F05529A4419D00AE62EA /* SceneDelegate.swift in Sources */,
 				A512F05A29A451F000AE62EA /* WeatherViewModel.swift in Sources */,
 				FE84D8F72995419700758E35 /* ImageViewExtension.swift in Sources */,
-				FE84D8E629953BEA00758E35 /* NetworkingConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
