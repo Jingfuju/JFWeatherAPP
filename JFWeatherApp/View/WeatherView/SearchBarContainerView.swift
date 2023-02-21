@@ -45,8 +45,8 @@ class SearchBarContainerView: UIView {
         }
     }
     
-    func bind(with weatherViewModel: WeatherViewModel) {
-        weatherViewModel.weatherModel.bind { [weak self] _ in
+    func bind(with weatherViewModel: WeatherViewModel?) {
+        weatherViewModel?.weatherModelObserver.bind { [weak self] _ in
             DispatchQueue.main.async {
                 self?.delegate?.reloadWeatherUI()
                 self?.searchButton.menu = self?.delegate?.createContextMenu()

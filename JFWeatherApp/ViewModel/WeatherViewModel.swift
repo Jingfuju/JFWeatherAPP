@@ -8,52 +8,82 @@
 import Foundation
 
 class WeatherViewModel {
-    private let apiService: NetworkServiceProtocol
-    init(apiService: NetworkServiceProtocol = NetworkHelper()) {
-        self.apiService = apiService
-    }
-
+    
+    // MARK: - Properties
+    
+    private let weatherModel: Weather
+    
+    var cityLabelText: String
+    var countryLabelText:  String
+    var commentLabelText:  String
+    var minTempLabelText:  String
+    var maxTempLabelText:  String
+    var dateLabelText:  String
+    var weatherDescriptionLabelText:  String
+    var temperatureLabelText: String
+    var weatherImageURLString: String
+    
     // create observers
-    var location: AppObserver<String> = AppObserver("")
-    let weatherModel: AppObserver<Weather?> = AppObserver(nil)
-
-    /// Fetch Weather
-    /// - Parameters:
-    ///   - params: Parameters q:Location, lat: lattitude, log: longitutude, appid: API key, unit: Metric: Celsius, Imperial: Fahrenheit default is Kelvin
-    ///   - complete: Completion block with Result<AppObserver<Weather?>, Error>
-    func fetchWeather(
-        params: [String: String],
-        complete: @escaping (Result<AppObserver<Weather?>, Error>) -> Void
+    var locationObserver: AppObserver<String> = AppObserver("")
+    let weatherModelObserver: AppObserver<Weather?> = AppObserver(nil)
+    
+    
+    // MARK: - Initializer
+    init(
+        weatherModel: Weather
     ) {
-        apiService.startNetworkTask(urlStr: NetworkHelperConstants.weatherURL, params: params) { result in
-            switch result {
-            case let .success(dataObject):
-                do {
-//                    let convertedString = String(data: dataObject ?? Data(), encoding: .utf8)
-//                    print("Response: \(convertedString ?? "No Data")")
-                    let decoderObject = JSONDecoder()
-                    self.weatherModel.value = try decoderObject.decode(Weather.self, from: dataObject!)
-                    complete(.success(self.weatherModel))
-                } catch {
-                    do {
-                        self.weatherModel.value = nil
-                        let decoderObject = JSONDecoder()
-                        let someCode: NoCity? = try decoderObject.decode(NoCity.self, from: dataObject!)
-                        if someCode != nil {
-                            print(someCode!.message as Any)
-                            complete(.failure(.other(someCode!.message!)))
-                        } else {
-                            complete(.failure(.other(error.localizedDescription)))
-                        }
-                    } catch {
-                        complete(.failure(.other(error.localizedDescription)))
-                    }
-                }
-
-            case let .failure(error):
-                self.weatherModel.value = nil
-                complete(.failure(.other(error.localizedDescription)))
+        self.weatherModel = weatherModel
+        weatherModelObserver.value = weatherModel
+        
+        cityLabelText = weatherModel.name ?? ""
+        countryLabelText = weatherModel.sys?.country ?? ""
+        
+        var message = ""
+        if let temperature = weatherModel.main?.temp {
+            switch temperature {
+            case ...15.0:
+                message = AppMessages.WeatherMessage.Winter.rawValue
+            case 15.1 ... 25.0:
+                message = AppMessages.WeatherMessage.Spring.rawValue
+            case 25.1...:
+                message = AppMessages.WeatherMessage.Summer.rawValue
+            default: break
             }
         }
+        commentLabelText = message
+        
+        minTempLabelText = String(format: "%.f°", weatherModel.main?.tempMin ?? 0)
+        maxTempLabelText = String(format: "%.f°", weatherModel.main?.tempMax ?? 0)
+        
+        var date = ""
+        if let timeData = weatherModel.timeData {
+            var timestampe = timeData
+            let timezoneDiff = timeData
+            timestampe += timezoneDiff
+            let weatherDate = timestampe.fromUnixTimeStamp()
+            date = " \(weatherDate?.convertToString(format: Constants.DateFormat_Long) ?? "")"
+        } else {
+            date = " \(Date().convertToString(format: Constants.DateFormat_Long))"
+        }
+        dateLabelText = date
+        
+        weatherDescriptionLabelText = weatherModel.weather?.first?.description ?? ""
+
+        let tempUnit: NSString
+        switch User.shared.tempratureUnit {
+        case .Celsius:
+            tempUnit = "C"
+        case .Fahrenheit:
+            tempUnit = "F"
+        case .Kelvin:
+            tempUnit = "K"
+        }
+        temperatureLabelText = String(format: "%.f°\(tempUnit)", weatherModel.main?.temp ?? 0)
+        
+    
+        weatherImageURLString =
+            "\(NetworkHelperConstants.imageURLString)" +
+            "\(weatherModel.weather?.first?.icon ?? "placeholder")" +
+            "@2x.png"
     }
 }

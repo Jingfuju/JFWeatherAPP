@@ -17,7 +17,7 @@ class WeatherViewController: UIViewController {
 
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation!
-    var weatherViewModel = WeatherViewModel()
+    var weatherViewModel: WeatherViewModel?
     let searchBarContainerView: SearchBarContainerView = .fromNib()
 
     // MARK: - Lift Cycle
@@ -76,22 +76,22 @@ class WeatherViewController: UIViewController {
     }
 
     
-    private lazy var nodataView: NoDataView = {
-        let ndV: NoDataView = Bundle.main.loadNibNamed("NoDataView", owner: self, options: nil)?.first as! NoDataView
-        ndV.center = view.center
-        ndV.setupSelectLocatin()
-        return ndV
+    private lazy var noDataView: NoDataView = {
+        let noDataView: NoDataView = Bundle.main.loadNibNamed("NoDataView", owner: self, options: nil)?.first as! NoDataView
+        noDataView.center = view.center
+        noDataView.setupSelectLocatin()
+        return noDataView
     }()
 
-    /// Show No Data View
+    
     func showNoDataView() {
-        view.addSubview(nodataView)
-        view.bringSubviewToFront(nodataView)
+        view.addSubview(noDataView)
+        view.bringSubviewToFront(noDataView)
     }
 
     /// Hide No Data View
     func hideNoDataView() {
-        nodataView.removeFromSuperview()
+        noDataView.removeFromSuperview()
     }
 }
 
@@ -113,7 +113,7 @@ extension WeatherViewController {
                 title: weather.name!,
                 identifier: UIAction.Identifier("HistoryMenu\(index + 1)")
             ) { action in
-                self.weatherViewModel.weatherModel.value = weather
+                self.weatherViewModel?.weatherModelObserver.value = weather
             }
         }
 
@@ -151,7 +151,7 @@ extension WeatherViewController: UITableViewDataSource {
         _: UITableView,
         numberOfRowsInSection _: Int) -> Int
     {
-        if weatherViewModel.weatherModel.value?.weather != nil {
+        if weatherViewModel?.weatherModelObserver.value?.weather != nil {
             return 1
         } else { return 0 }
     }
@@ -160,13 +160,14 @@ extension WeatherViewController: UITableViewDataSource {
         _ tableView: UITableView, cellForRowAt
         _: IndexPath
     ) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.WeatherCellId) else {
+        guard
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.WeatherCellId
+        ) else {
             return UITableViewCell()
         }
         let weatherView = cell.contentView.viewWithTag(1) as! WeatherView
-        if weatherViewModel.weatherModel.value?.weather != nil {
-            let weather = weatherViewModel.weatherModel.value!
-            weatherView.update(with: weather)
+        if let viewModel = weatherViewModel {
+            weatherView.update(with: viewModel)
         }
         return cell
     }
@@ -216,7 +217,6 @@ extension WeatherViewController: CLLocationManagerDelegate {
         // kCLLocationAccuracyHundredMeters, kCLLocationAccuracyKilometer, or kCLLocationAccuracyThreeKilometers
         // then you can use $0.horizontalAccuracy <= manager.desiredAccuracy. Otherwise enter the number of meters desired.
         if let location = locations.first(where: { $0.horizontalAccuracy <= 50 }) {
-            print("location found: \(location)")
             performLocationUpdate(location: locationManager.location)
             // stop updating Location if you don't need any more updates
             manager.stopUpdatingLocation()
@@ -251,7 +251,7 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
     }
     
     func reloadWeatherUI() {
-        if weatherViewModel.weatherModel.value?.weather != nil {
+        if weatherViewModel?.weatherModelObserver.value?.weather != nil {
             hideNoDataView()
             searchBarContainerView.closeKeyboard(isClear: true)
         } else {
@@ -268,13 +268,9 @@ extension WeatherViewController {
     /// Get Weather information for User's Location as in Lat & Lon
     /// - Parameter location: user's location
     func getWeatherForAvailableLocation(location: User.Location) {
-        print("Lat:\(location.latitude!)")
-        print("Lat:\(location.longitude!)")
-        let lat = String(location.latitude)
-        let lon = String(location.longitude)
         let params: [String: String] = [
-            "lat": lat,
-            "lon": lon,
+            "lat": String(location.latitude),
+            "lon": String(location.longitude),
             "units": User.shared.tempratureUnit.rawValue,
             "appid": NetworkHelperConstants.weatherAPIKey
         ]
@@ -305,18 +301,62 @@ extension WeatherViewController {
         if Reachability.shared.status == .connectedViaWiFi || Reachability.shared.status == .connectedViaCellular {
             tableView.isHidden = false
             tableView.showLoading(activityColor: .link)
-            weatherViewModel.fetchWeather(params: params) { result in
+            fetchWeather(params: params) { result in
                 self.tableView.hideLoading()
                 switch result {
                 case .success:
-                    _ = HistoryProvider.writeWeatherHistory(weather: self.weatherViewModel.weatherModel.value)
+                    _ = HistoryProvider.writeWeatherHistory(weather: self.weatherViewModel?.weatherModelObserver.value)
                 // No need to handle UI Updates here as whenever a new weather will be updated and the binding will take place and trigger UI Update
+                    
+                    self.tableView.reloadData()
+                    self.hideNoDataView()
                 case let .failure(error):
                     self.showAlert(message: error.localizedDescription)
                 }
             }
         } else {
             showAlert(message: Error.network.localizedDescription)
+        }
+    }
+    
+    /// Fetch Weather
+    /// - Parameters:
+    ///   - params: Parameters q:Location, lat: lattitude, log: longitutude, appid: API key, unit: Metric: Celsius, Imperial: Fahrenheit default is Kelvin
+    ///   - complete: Completion block with Result<AppObserver<Weather?>, Error>
+    func fetchWeather(
+        params: [String: String],
+        complete: @escaping (Result<AppObserver<Weather?>, Error>) -> Void
+    ) {
+        NetworkHelper().startNetworkTask(
+            urlStr: NetworkHelperConstants.weatherURLString,
+            params: params
+        ) { result in
+            switch result {
+            case let .success(dataObject):
+                do {
+                    let decoderObject = JSONDecoder()
+                    let weatherModel = try decoderObject.decode(Weather.self, from: dataObject!)
+                    self.weatherViewModel = WeatherViewModel(weatherModel: weatherModel)
+                    complete(.success(self.weatherViewModel?.weatherModelObserver ?? AppObserver(nil)))
+                } catch {
+                    do {
+                        self.weatherViewModel?.weatherModelObserver.value = nil
+                        let decoderObject = JSONDecoder()
+                        let someCode: NoCity? = try decoderObject.decode(NoCity.self, from: dataObject!)
+                        if someCode != nil {
+                            complete(.failure(.other(someCode!.message!)))
+                        } else {
+                            complete(.failure(.other(error.localizedDescription)))
+                        }
+                    } catch {
+                        complete(.failure(.other(error.localizedDescription)))
+                    }
+                }
+
+            case let .failure(error):
+                self.weatherViewModel?.weatherModelObserver.value = nil
+                complete(.failure(.other(error.localizedDescription)))
+            }
         }
     }
 }

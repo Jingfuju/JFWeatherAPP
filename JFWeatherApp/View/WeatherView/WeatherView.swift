@@ -25,68 +25,28 @@ class WeatherView: UIView {
 
     
     func update(with viewModel: WeatherViewModel) {
+        self.cityLabel.text = viewModel.cityLabelText
+        self.countryLabel.text = viewModel.countryLabelText
+        self.commentLabel.text = viewModel.commentLabelText
+        self.minTempLabel.text = viewModel.minTempLabelText
+        self.maxTempLabel.text = viewModel.maxTempLabelText
+        self.dateLabel.text = viewModel.dateLabelText
+        self.weatherDescriptionLabel.text = viewModel.weatherDescriptionLabelText
         
+        animate(label: temperatureLabel, with: viewModel.temperatureLabelText, options: .curveEaseIn)
+        weatherImage.loadImageWithUrl(URL(string:viewModel.weatherImageURLString)!)
     }
     
-    
-    func update(with weather: Weather) {
-        let temperature = weather.main?.temp
-        switch temperature! {
-        case ...15.0:
-            commentLabel.text = AppMessages.WeatherMessage.Winter.rawValue
-        case 15.1 ... 25.0:
-            commentLabel.text = AppMessages.WeatherMessage.Spring.rawValue
-        case 25.1...:
-            commentLabel.text = AppMessages.WeatherMessage.Summer.rawValue
-        default: break
-        }
-
-        if let iconId = weather.weather?.first?.icon {
-            weatherImage.loadImageWithUrl(URL(string: "\(NetworkHelperConstants.imageURL)\(iconId)@2x.png")!)
-        }
-
-        setupDateLabel(with: weather)
-        minTempLabel.text = String(format: "%.f°", weather.main?.tempMin ?? 0)
-        maxTempLabel.text = String(format: "%.f°", weather.main?.tempMax ?? 0)
-        cityLabel.text = weather.name
-        countryLabel.text = weather.sys?.country
-        weatherDescriptionLabel.text = weather.weather?.first?.description
-
-        let tempUnit: NSString
-        switch User.shared.tempratureUnit {
-        case .Celsius:
-            tempUnit = "C"
-        case .Fahrenheit:
-            tempUnit = "F"
-        case .Kelvin:
-            tempUnit = "K"
-        }
-        animate(text: String(format: "%.f°\(tempUnit)", weather.main?.temp ?? 0), with: .curveEaseIn)
-    }
-
-    func setupDateLabel(with weather: Weather) {
-        let date: String
-        if weather.timeData != nil {
-            var timestampe = weather.timeData ?? 0
-            let timezoneDiff = weather.timeZone ?? 0
-            timestampe += timezoneDiff
-            let weatherDate = timestampe.fromUnixTimeStamp()
-            date = " \(weatherDate?.convertToString(format: Constants.DateFormat_Long) ?? "")"
-        } else {
-            date = " \(Date().convertToString(format: Constants.DateFormat_Long))"
-        }
-        dateLabel.text = date
-    }
-
-    
-    private func animate(text: String, with options: UIView.AnimationOptions) {
+    private func animate(
+        label: UILabel,
+        with text: String,
+        options: UIView.AnimationOptions
+    ) {
         UIView.transition(
-            with: temperatureLabel,
+            with: label,
             duration: Constants.AnimationDuration,
             options: options,
-            animations: { [weak self] in
-                self?.temperatureLabel.text = text
-            },
+            animations: { label.text = text },
             completion: nil
         )
     }
