@@ -65,14 +65,17 @@ class WeatherViewController: UIViewController {
 
     // MARK: - Error / No Data Handling
 
-    func showAlert(message: String) {
-        openAlert(
+    private func showAlert(message: String) {
+        let alertController = UIAlertController(
             title: AppMessages.AppTitle,
-            message: message, alertStyle: .alert,
-            actionTitles: ["Okay"],
-            actionStyles: [.default],
-            actions: [{ _ in },]
+            message: message,
+            preferredStyle: .alert
         )
+        let action = UIAlertAction(title: "Okay", style: .default)
+        alertController.addAction(action)
+        DispatchQueue.main.async {
+            self.present(alertController, animated: true)
+        }
     }
 
     

@@ -14,7 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let storyboard = UIStoryboard(name: String(describing: WeatherView.self), bundle: nil)
         window.rootViewController = storyboard.instantiateViewController(
             withIdentifier: String(describing: WeatherViewController.self)
         ) as! WeatherViewController
