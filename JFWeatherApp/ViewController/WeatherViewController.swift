@@ -19,6 +19,7 @@ class WeatherViewController: UIViewController {
     var currentLocation: CLLocation!
     var weatherViewModel: WeatherViewModel?
     let searchBarContainerView: SearchBarContainerView = .fromNib()
+    var weatherService: WeatherServiceProtocol = LiveWeatherService(networkService: LiveNetworkService())
     
     // MARK: - UI
     
@@ -137,7 +138,20 @@ extension WeatherViewController: CLLocationManagerDelegate {
         if let location = location {
             User.Location.shared.latitude = location.coordinate.latitude
             User.Location.shared.longitude = location.coordinate.longitude
-            getWeatherForAvailableLocation(location: User.Location.shared)
+            
+            weatherService.fetchCoordinateWeather(
+                coordinate: User.Location.shared,
+                completion: { [weak self] weatherServiceResult in
+                    guard let self = self else { return }
+                    switch weatherServiceResult {
+                    case let .success(weather):
+                        self.weatherViewModel = WeatherViewModel(weatherModel: weather)
+                        self.reloadWeatherUI()
+                    case let .failure(_):
+                        break
+                    }
+                }
+            )
         }
     }
 
@@ -180,7 +194,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
         }
     }
 
-    private func locationManager(
+    internal func locationManager(
         _: CLLocationManager,
         didFailWithError error: Error
     ) {
@@ -199,7 +213,19 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
     func userSearchedLocation(location: String) {
         locationManager.stopUpdatingLocation()
         if !location.trimmingCharacters(in: .whitespaces).isEmpty {
-            getWeatherForSearchLocation(location: location)
+            weatherService.fetchLocationWeather(
+                location: location,
+                completion: { [weak self] weatherServiceResult in
+                    guard let self = self else { return }
+                    switch weatherServiceResult {
+                    case let .success(weather):
+                        self.weatherViewModel = WeatherViewModel(weatherModel: weather)
+                        self.reloadWeatherUI()
+                    case let .failure(_):
+                        break
+                    }
+                }
+            )
         } else {
             showAlert(message: AppMessages.selectLocation)
         }
@@ -219,101 +245,6 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
 // MARK: - Web Service Calling
 
 extension WeatherViewController {
-    
-    /// Get Weather information for User's Location as in Lat & Lon
-    /// - Parameter location: user's location
-    func getWeatherForAvailableLocation(location: User.Location) {
-        let params: [String: String] = [
-            "lat": String(location.latitude),
-            "lon": String(location.longitude),
-            "units": User.shared.tempratureUnit.rawValue,
-            "appid": NetworkHelperConstants.weatherAPIKey
-        ]
-        fetchWeather(params: params)
-    }
-    
-    func getWeatherForSelectedCity(cityId: String) {
-        let params: [String: String] = [
-            "id": cityId,
-            "units": User.shared.tempratureUnit.rawValue,
-            "appid": NetworkHelperConstants.weatherAPIKey
-        ]
-        fetchWeather(params: params)
-    }
-
-   
-    func getWeatherForSearchLocation(location: String) {
-        let params: [String: String] = [
-            "q": location,
-            "units": User.shared.tempratureUnit.rawValue,
-            "appid": NetworkHelperConstants.weatherAPIKey
-        ]
-        fetchWeather(params: params)
-    }
-
-    
-    func fetchWeather(params: [String: String]) {
-        if Reachability.shared.status == .connectedViaWiFi || Reachability.shared.status == .connectedViaCellular {
-            tableView.isHidden = false
-            tableView.showLoading(activityColor: .link)
-            fetchWeather(params: params) { result in
-                self.tableView.hideLoading()
-                switch result {
-                case .success:
-                    _ = HistoryProvider.writeWeatherHistory(weather: self.weatherViewModel?.weatherModelObserver.value)
-                // No need to handle UI Updates here as whenever a new weather will be updated and the binding will take place and trigger UI Update
-                    
-                    self.tableView.reloadData()
-                    self.hideNoDataView()
-                case let .failure(error):
-                    self.showAlert(message: error.localizedDescription)
-                }
-            }
-        } else {
-            showAlert(message: Error.network.localizedDescription)
-        }
-    }
-    
-    /// Fetch Weather
-    /// - Parameters:
-    ///   - params: Parameters q:Location, lat: lattitude, log: longitutude, appid: API key, unit: Metric: Celsius, Imperial: Fahrenheit default is Kelvin
-    ///   - complete: Completion block with Result<AppObserver<Weather?>, Error>
-    func fetchWeather(
-        params: [String: String],
-        complete: @escaping (Result<AppObserver<Weather?>, Error>) -> Void
-    ) {
-        NetworkHelper().startNetworkTask(
-            urlStr: NetworkHelperConstants.weatherURLString,
-            params: params
-        ) { result in
-            switch result {
-            case let .success(dataObject):
-                do {
-                    let decoderObject = JSONDecoder()
-                    let weatherModel = try decoderObject.decode(Weather.self, from: dataObject!)
-                    self.weatherViewModel = WeatherViewModel(weatherModel: weatherModel)
-                    complete(.success(self.weatherViewModel?.weatherModelObserver ?? AppObserver(nil)))
-                } catch {
-                    do {
-                        self.weatherViewModel?.weatherModelObserver.value = nil
-                        let decoderObject = JSONDecoder()
-                        let someCode: NoCity? = try decoderObject.decode(NoCity.self, from: dataObject!)
-                        if someCode != nil {
-                            complete(.failure(.other(someCode!.message!)))
-                        } else {
-                            complete(.failure(.other(error.localizedDescription)))
-                        }
-                    } catch {
-                        complete(.failure(.other(error.localizedDescription)))
-                    }
-                }
-
-            case let .failure(error):
-                self.weatherViewModel?.weatherModelObserver.value = nil
-                complete(.failure(.other(error.localizedDescription)))
-            }
-        }
-    }
     
     func createContextMenu() -> UIMenu {
         var menuList = [UIAction]()

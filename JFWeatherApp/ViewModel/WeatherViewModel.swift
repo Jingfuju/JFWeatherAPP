@@ -27,6 +27,7 @@ class WeatherViewModel {
     var locationObserver: AppObserver<String> = AppObserver("")
     let weatherModelObserver: AppObserver<Weather?> = AppObserver(nil)
     
+    private let imageURLString = "https://openweathermap.org/img/wn/"
     
     // MARK: - Initializer
     init(
@@ -81,7 +82,7 @@ class WeatherViewModel {
         temperatureLabelText = String(format: "%.f°\(tempUnit)", weatherModel.main?.temp ?? 0)
         
         weatherImageURLString =
-            "\(NetworkHelperConstants.imageURLString)" +
+            "\(imageURLString)" +
             "\(weatherModel.weather?.first?.icon ?? "placeholder")" +
             "@2x.png"
     }
