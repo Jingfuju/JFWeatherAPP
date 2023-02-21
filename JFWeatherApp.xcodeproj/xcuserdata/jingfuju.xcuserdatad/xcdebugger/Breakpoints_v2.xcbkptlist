@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "9C2667CF-B809-44BB-8D34-6670EFD46811"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "060D535B-57E3-4C99-91D8-5774E5C7F735"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JFWeatherApp/View/WeatherView/LocationInputView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "SearchBarContainerView"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "306E9285-31CF-4BB6-9EB5-357947AF3E3D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JFWeatherApp/View/NoDataView/NoDataView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
+            landmarkName = "EmptyStateView"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "306E9285-31CF-4BB6-9EB5-357947AF3E3D - bb6fb98e66f9d13d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "JFWeatherApp.NoDataView.lblNoData.getter : Swift.Optional&lt;__C.UILabel&gt;"
+                  moduleName = "JFWeatherApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jingfuju/Documents/Projects/Weather%20APP/JFWeatherApp%20Chase/JFWeatherApp/View/NoDataView/NoDataView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "88">
+               </Location>
+               <Location
+                  uuid = "306E9285-31CF-4BB6-9EB5-357947AF3E3D - ea989e71474a0a31"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "JFWeatherApp.NoDataView.lblNoData.setter : Swift.Optional&lt;__C.UILabel&gt;"
+                  moduleName = "JFWeatherApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jingfuju/Documents/Projects/Weather%20APP/JFWeatherApp%20Chase/JFWeatherApp/View/NoDataView/NoDataView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "108">
+               </Location>
+               <Location
+                  uuid = "306E9285-31CF-4BB6-9EB5-357947AF3E3D - 3db1a96e0a154b02"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "JFWeatherApp.NoDataView.lblNoData.modify : Swift.Optional&lt;__C.UILabel&gt;"
+                  moduleName = "JFWeatherApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jingfuju/Documents/Projects/Weather%20APP/JFWeatherApp%20Chase/JFWeatherApp/View/NoDataView/NoDataView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "0">
+               </Location>
+               <Location
+                  uuid = "306E9285-31CF-4BB6-9EB5-357947AF3E3D - 38c1f647bf26801d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "JFWeatherApp.NoDataView.lblNoData.modify : Swift.Optional&lt;__C.UILabel&gt; with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "JFWeatherApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jingfuju/Documents/Projects/Weather%20APP/JFWeatherApp%20Chase/JFWeatherApp/View/NoDataView/NoDataView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "16">
+               </Location>
+               <Location
+                  uuid = "306E9285-31CF-4BB6-9EB5-357947AF3E3D - 26e524412e94466a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "JFWeatherApp.NoDataView.init(frame: __C.CGRect) -&gt; JFWeatherApp.NoDataView"
+                  moduleName = "JFWeatherApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jingfuju/Documents/Projects/Weather%20APP/JFWeatherApp%20Chase/JFWeatherApp/View/NoDataView/NoDataView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "132">
+               </Location>
+               <Location
+                  uuid = "306E9285-31CF-4BB6-9EB5-357947AF3E3D - 54cfead43e3002e6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "JFWeatherApp.NoDataView.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;JFWeatherApp.NoDataView&gt;"
+                  moduleName = "JFWeatherApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jingfuju/Documents/Projects/Weather%20APP/JFWeatherApp%20Chase/JFWeatherApp/View/NoDataView/NoDataView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "15"
+                  endingLineNumber = "15"
+                  offsetFromSymbolStart = "104">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

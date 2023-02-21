@@ -8,10 +8,7 @@
 import Foundation
 import Network
 
-
-
 class Reachability {
-
     enum StatusFlag {
         case unknow
         case noConnection
@@ -20,7 +17,7 @@ class Reachability {
     }
 
     static let connectionStatusHasChangedNotification = NSNotification.Name("Reachability.connectionStatusHasChangedNotification")
-    
+
     static let shared = Reachability()
 
     private var monitorForWifi: NWPathMonitor?

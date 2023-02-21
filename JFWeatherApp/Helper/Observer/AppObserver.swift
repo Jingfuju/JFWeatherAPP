@@ -8,7 +8,7 @@
 import Foundation
 final class AppObserver<T> {
     typealias Listener = (T) -> Void
-  
+
     var listener: Listener?
     var value: T {
         didSet {
@@ -16,14 +16,14 @@ final class AppObserver<T> {
         }
     }
 
-    init(_ value: T){
+    init(_ value: T) {
         self.value = value
     }
 
-    func bind(listener: Listener?){
+    func bind(listener: Listener?) {
         self.listener = listener
     }
-    
+
     func bindAndFire(listener: Listener?) {
         self.listener = listener
         listener?(value)

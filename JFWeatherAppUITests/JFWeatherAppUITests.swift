@@ -5,11 +5,10 @@
 //  Created by Anand Upadhyay on 09/02/23.
 //
 
+@testable import JFWeatherApp
 import XCTest
-@testable import AUWeatherApp
 
 class JFWeatherAppUITests: XCTestCase {
-
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
@@ -42,133 +41,123 @@ class JFWeatherAppUITests: XCTestCase {
     }
 }
 
-class WeatherAppUITest: XCTestCase{
+class WeatherAppUITest: XCTestCase {
     let app = XCUIApplication()
-    
+
     override func setUpWithError() throws {
-        continueAfterFailure = false;
+        continueAfterFailure = false
         app.activate()
         app.launch()
     }
-    
+
     override func tearDownWithError() throws {
         app.terminate()
     }
-    
-    func testUserLocationButtonTap(){
+
+    func testUserLocationButtonTap() {
         app.buttons["MyCurrentLocation"].tap()
     }
-    
-    
-    
-    func testSearchLocationExist(){
+
+    func testSearchLocationExist() {
 //        app.maps.accessibilityele
 //        let table = app.tables.element
-          app.textFields["TextLocation"].tap()
+        app.textFields["TextLocation"].tap()
 //        XCTAssertTrue(!exists,"Text Field Exist")
     }
-    
-    
-    func testUserSearchLocationWithCorrectInput()
-    {
+
+    func testUserSearchLocationWithCorrectInput() {
         let txtSearchLocation = app.textFields["TextLocation"]
         txtSearchLocation.tap()
         txtSearchLocation.typeText("Sydney")
         app.keyboards.buttons["Search"].tap()
     }
-    
-    func testUserSearchLocationWithInCorrectInput()
-    {
+
+    func testUserSearchLocationWithInCorrectInput() {
         let txtSearchLocation = app.textFields["TextLocation"]
         txtSearchLocation.tap()
         txtSearchLocation.typeText("Hello John")
         app.keyboards.buttons["Search"].tap()
     }
-    
-    func testEmptySearchLocation(){
+
+    func testEmptySearchLocation() {
         let usernameTextField = app.textFields["TextLocation"]
         XCTAssert(usernameTextField.exists)
         usernameTextField.tap()
         app.keyboards.buttons["Search"].tap()
         app.alerts.firstMatch.buttons["Okay"].tap()
     }
-    
+
     func testTableExist() throws {
         let table = app.tables.element
         XCTAssertTrue(table.exists)
     }
-    
-    func testOrienation(){
-        (XCUIDevice.shared.orientation = .landscapeLeft)
+
+    func testOrienation() {
+        XCUIDevice.shared.orientation = .landscapeLeft
     }
 }
 
-class CityListUITest: XCTestCase{
-    
+class CityListUITest: XCTestCase {
     let app = XCUIApplication()
-    
+
     override func setUpWithError() throws {
-        continueAfterFailure = false;
+        continueAfterFailure = false
         app.activate()
         app.launch()
     }
-    
+
     override func tearDownWithError() throws {
         app.terminate()
     }
-    
-    func testOpenCityList(){
-        app.buttons["CityButton"].tap()
-    }
-    
-    func testCityListTableExistance(){
+
+//    func testOpenCityList() {
+//        app.buttons["CityButton"].tap()
+//    }
+
+    func testCityListTableExistance() {
         app.buttons["CityButton"].tap()
         let table = app.tables["CityListTable"]
         XCTAssert(table.waitForExistence(timeout: 2))
     }
 
-    func testCityListTableLoaded(){
+    func testCityListTableLoaded() {
         app.buttons["CityButton"].tap()
         let table = app.tables["CityListTable"]
         XCTAssert(table.waitForExistence(timeout: 2))
-        
+
         let complaintCell = table.cells.element(boundBy: 0)
         XCTAssert(complaintCell.waitForExistence(timeout: 30))
-        
+
         table.cells.firstMatch.tap()
     }
 }
 
-class HistoryTest: XCTestCase{
-    
+class HistoryTest: XCTestCase {
     let app = XCUIApplication()
-    
+
     override func setUpWithError() throws {
-        continueAfterFailure = false;
+        continueAfterFailure = false
         app.activate()
         app.launch()
     }
-    
+
     override func tearDownWithError() throws {
         app.terminate()
     }
-    
-    func testHistoryTap(){
+
+    func testHistoryTap() {
         let rightNavBarButton = XCUIApplication().navigationBars.buttons["HistoryButton"]
         XCTAssert(rightNavBarButton.exists)
         rightNavBarButton.tap()
     }
-    
-    func testSelectHistory(){
+
+    func testSelectHistory() {
         let rightNavBarButton = XCUIApplication().navigationBars.buttons["HistoryButton"]
         XCTAssert(rightNavBarButton.exists)
         rightNavBarButton.tap()
         let isMenuAvailable = app.descendants(matching: .any).element(matching: .any, identifier: "HistoryMenu1").exists
-        if isMenuAvailable
-        {
+        if isMenuAvailable {
             app.descendants(matching: .any).element(matching: .any, identifier: "HistoryMenu1").tap()
         }
     }
 }
-
-

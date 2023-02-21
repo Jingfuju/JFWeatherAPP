@@ -8,7 +8,6 @@
 import XCTest
 
 class JFWeatherAppUITestsLaunchTests: XCTestCase {
-
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
     }

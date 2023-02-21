@@ -5,11 +5,10 @@
 //  Created by Jingfu Ju on 2/20/23.
 //
 
-import XCTest
 @testable import JPWeatherAPP
+import XCTest
 
 final class JPWeatherAPPTests: XCTestCase {
-
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -28,9 +27,8 @@ final class JPWeatherAPPTests: XCTestCase {
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
-        self.measure {
+        measure {
             // Put the code you want to measure the time of here.
         }
     }
-
 }

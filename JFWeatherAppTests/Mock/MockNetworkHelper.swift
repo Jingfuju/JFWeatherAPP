@@ -5,12 +5,12 @@
 //  Created by Anand Upadhyay on 13/02/23.
 //
 
-import Foundation
 @testable import AUWeatherApp
+import Foundation
 
 class MockNetworkHelper: NetworkServiceProtocol {
     static let shared = MockNetworkHelper()
-    
+
     /// Load as Json from file
     /// - Parameter fileName: JSon file to load data from
     /// - Returns: data
@@ -25,11 +25,11 @@ class MockNetworkHelper: NetworkServiceProtocol {
         }
         return Data()
     }
-    
-    func startNetworkTask(urlStr:String, params:[String:String], resultHandler: @escaping (Result<Data?, Error>) -> Void){
+
+    func startNetworkTask(urlStr _: String, params _: [String: String], resultHandler: @escaping (Result<Data?, Error>) -> Void) {
         Dispatch.background {
             let data = MockNetworkHelper.loadFromJson(filename: "SingleWeather")
-            Dispatch.main{
+            Dispatch.main {
                 resultHandler(.success(data))
             }
         }

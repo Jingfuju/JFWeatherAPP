@@ -1,228 +1,215 @@
 //
 //  WeatherViewController.swift
-//  AUWeatherApp
+//  JFWeatherApp
 //
-//  Created by Anand Upadhyay on 11/02/23.
+//  Created by Jingfu Ju on 2/20/23.
 //
 
-import UIKit
-import Foundation
 import CoreLocation
+import Foundation
+import UIKit
 
 class WeatherViewController: UIViewController {
     
-    @IBOutlet weak var tblWeather: UITableView!
-    @IBOutlet weak var barBtnHistory: UIBarButtonItem!{
-        didSet{
-            barBtnHistory.primaryAction = nil
-            barBtnHistory.accessibilityIdentifier = "HistoryButton"
-            barBtnHistory.menu = self.createContextMenu()
-        }
-    }
-    
-    //MARK: Private Properties
+    @IBOutlet var tableView: UITableView!
+
+    // MARK: - Private Properties
+
     let locationManager = CLLocationManager()
-    var currentLocation : CLLocation!
-    var weatherVM = WeatherViewModel()
-    let locationPickView: LocationInputView = .fromNib()
-    
-    override func viewDidLoad(){
+    var currentLocation: CLLocation!
+    var weatherViewModel = WeatherViewModel()
+    let searchBarContainerView: SearchBarContainerView = .fromNib()
+
+    // MARK: - Lift Cycle
+
+    override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
-        // Do any additional setup after loading the view.
-    }
     
+        setupView()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        requestLocationAccess()
+    }
+
     // MARK: - Setup UI , Reload and Observer Binding
-    func setupView(){
-        //No Data View
+
+    func setupView() {
+        
         showNoDataView()
-        //Title
-        self.title = AppMessages.AppTitle
-        //Tableview
-        tblWeather.adjustSeperatorInsent()
-        tblWeather.dataSource = self
-        //Header View
-        locationPickView.delegate = self
-        tblWeather.tableHeaderView = locationPickView
-        //Location Manager
-        self.locationManager.delegate = self
-        self.locationManager.desiredAccuracy =  kCLLocationAccuracyBest
-        //Binding Observer
-        bindWeatherModel()
-        //Reachability
+        self.navigationController?.isNavigationBarHidden = true
+
+
+        tableView.dataSource = self
+        tableView.tableHeaderView = searchBarContainerView
+        
+        
+        searchBarContainerView.topAnchor.constraint(
+            equalTo: view.safeAreaLayoutGuide.topAnchor,
+            constant: 0
+        )
+        
+        searchBarContainerView.leadingAnchor.constraint(
+            equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+            constant: 0
+        )
+        
+        searchBarContainerView.trailingAnchor.constraint(
+            equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+            constant: 0
+        )
+        searchBarContainerView.delegate = self
+        searchBarContainerView.bind(with: weatherViewModel)
         Reachability.shared.startMonitoring()
         //        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(_:)), name:  Reachability.connectionStatusHasChangedNotification, object: nil)
     }
-    
-    /// Reload Weather UI
-    func reloadWeatherUI(){
-        if weatherVM.weatherModel.value?.weather != nil {
-            //Found Weather
-            hideNoDataView()
-            locationPickView.closeKeyboard(isClear: true)
-        }else{
-            //Not Found
-            showNoDataView()
-        }
-        tblWeather.reloadData()
-    }
-    
-    /// Binding of Observer
-    func bindWeatherModel(){
-        weatherVM.weatherModel.bind { [weak self] newModel in
-            DispatchQueue.main.async {
-                self?.reloadWeatherUI()
-                self?.barBtnHistory.menu =  self?.createContextMenu()
-            }
-        }
-    }
-    
+
     // MARK: - Error / No Data Handling
-    
-    /// Show Common Alert
-    /// - Parameter message: Alert Message
-    func showAlert(message: String){
-        openAlert(title: AppMessages.AppTitle, message: message,  alertStyle: .alert, actionTitles: ["Okay"], actionStyles: [.default],actions: [
-            { _ in
-            }
-        ])
+
+    func showAlert(message: String) {
+        openAlert(
+            title: AppMessages.AppTitle,
+            message: message, alertStyle: .alert,
+            actionTitles: ["Okay"],
+            actionStyles: [.default],
+            actions: [{ _ in },]
+        )
     }
+
     
-    /// No Data Label
     private lazy var nodataView: NoDataView = {
         let ndV: NoDataView = Bundle.main.loadNibNamed("NoDataView", owner: self, options: nil)?.first as! NoDataView
         ndV.center = view.center
         ndV.setupSelectLocatin()
         return ndV
     }()
-    
+
     /// Show No Data View
-    func showNoDataView(){
+    func showNoDataView() {
         view.addSubview(nodataView)
         view.bringSubviewToFront(nodataView)
     }
-    
+
     /// Hide No Data View
     func hideNoDataView() {
         nodataView.removeFromSuperview()
     }
 }
 
-//MARK: - Weather History Menu
-extension WeatherViewController{
+// MARK: - Weather History Menu
+
+extension WeatherViewController {
     
-    /// Create Context Menu for History Button
-    /// - Returns: UIMenu menu list
+   
     func createContextMenu() -> UIMenu {
-        
         var menuList = [UIAction]()
-        guard let historyList = HistoryProvider.readWeatherHistory() else{
+        guard let historyList = HistoryProvider.readWeatherHistory() else {
             let noHisotryAction = UIAction(title: AppMessages.NoWeatherHistoryMessage, image: UIImage(systemName: "list.number")) { _ in
             }
             return UIMenu(title: AppMessages.WeatherHistoryTitle, image: nil, identifier: .edit, options: .singleSelection, children: [noHisotryAction])
         }
-        
-        menuList = historyList.enumerated().map { index,weather in
-            return UIAction(
+
+        menuList = historyList.enumerated().map { index, weather in
+            UIAction(
                 title: weather.name!,
-                identifier: UIAction.Identifier("HistoryMenu\(index + 1)")) { action in
-                    print(action.title)
-                    self.weatherVM.weatherModel.value = weather
-                }
+                identifier: UIAction.Identifier("HistoryMenu\(index + 1)")
+            ) { action in
+                self.weatherViewModel.weatherModel.value = weather
+            }
         }
-        
-        //Add Clear History Action
+
+        // Add Clear History Action
         var removeRatingAttributes = UIMenuElement.Attributes.destructive
-        //enable or disable action based on the count
+        // enable or disable action based on the count
         if historyList.count == 0 {
-          removeRatingAttributes.insert(.disabled)
+            removeRatingAttributes.insert(.disabled)
         }
         let deleteImage = UIImage(systemName: "trash.fill")
         let clearHistory = UIAction(
-          title: AppMessages.ClearHistoryTitle,
-          image: deleteImage,
-          identifier: UIAction.Identifier("ClearHisotyr"),
-          attributes: removeRatingAttributes) { _ in
-              HistoryProvider.clearWeatherHistory()
-              self.barBtnHistory.menu = self.createContextMenu()
+            title: AppMessages.ClearHistoryTitle,
+            image: deleteImage,
+            identifier: UIAction.Identifier("ClearHisotyr"),
+            attributes: removeRatingAttributes
+        ) { _ in
+            HistoryProvider.clearWeatherHistory()
+            self.searchBarContainerView.searchButton.menu = self.createContextMenu()
         }
         menuList.append(clearHistory)
-        
-        return UIMenu(title: AppMessages.WeatherHistoryTitle, image: UIImage(systemName: "list.number"), identifier: .edit, options: .singleSelection, children: menuList)
+
+        return UIMenu(
+            title: AppMessages.WeatherHistoryTitle,
+            image: UIImage(systemName: "list.number"),
+            identifier: .edit, options: .singleSelection,
+            children: menuList
+        )
     }
 }
 
-
+// MARK: - UITableViewDataSource
 
 extension WeatherViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if weatherVM.weatherModel.value?.weather != nil {
+    func tableView(
+        _: UITableView,
+        numberOfRowsInSection _: Int) -> Int
+    {
+        if weatherViewModel.weatherModel.value?.weather != nil {
             return 1
-        }else{ return 0 }
+        } else { return 0 }
     }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.WeatherCellId)  else {
+
+    func tableView(
+        _ tableView: UITableView, cellForRowAt
+        _: IndexPath
+    ) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.WeatherCellId) else {
             return UITableViewCell()
         }
-        
-        //Access the weather view from Cell and provide weather information to update ui
         let weatherView = cell.contentView.viewWithTag(1) as! WeatherView
-        if weatherVM.weatherModel.value?.weather != nil {
-            let weather = weatherVM.weatherModel.value!
+        if weatherViewModel.weatherModel.value?.weather != nil {
+            let weather = weatherViewModel.weatherModel.value!
             weatherView.update(with: weather)
         }
         return cell
     }
 }
 
+// MARK: - CLLocationManagerDelegate
 
-
-// MARK: - User's Current Location Handling
-extension WeatherViewController: CLLocationManagerDelegate{
-    
+extension WeatherViewController: CLLocationManagerDelegate {
     /// handle Location after received from Location Manager
     /// - Parameter location: Location
-    func performLocationUpdate(location: CLLocation?){
-        if let location = location{
+    func performLocationUpdate(location: CLLocation?) {
+        if let location = location {
             User.Location.shared.latitude = location.coordinate.latitude
             User.Location.shared.longitude = location.coordinate.longitude
-            self.getWeatherForAvailableLocation(location: User.Location.shared)
+            getWeatherForAvailableLocation(location: User.Location.shared)
         }
     }
-    
-    func requestLocationAccess(){
+
+    func requestLocationAccess() {
         if locationManager.authorizationStatus == .authorizedWhenInUse {
             locationManager.startUpdatingLocation()
-        }
-        else{
+        } else {
             locationManager.requestWhenInUseAuthorization()
             locationManager.startUpdatingLocation()
         }
     }
-    
+
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .notDetermined:
-            // Request the appropriate authorization based on the needs of the app
             manager.requestWhenInUseAuthorization()
         case .restricted:
             print("Sorry, restricted")
-            // Optional: Offer to take user to app's settings screen
         case .denied:
             print("Sorry, denied")
-            // Optional: Offer to take user to app's settings screen
         case .authorizedAlways, .authorizedWhenInUse:
-            // The app has permission so start getting location updates
             manager.startUpdatingLocation()
         @unknown default:
-            print("Unknown status")
+            break
         }
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
         // Some location updates can be invalid or have insufficient accuracy.
         // Find the first location that has sufficient horizontal accuracy.
         // If the manager's desiredAccuracy is one of kCLLocationAccuracyNearestTenMeters,
@@ -230,111 +217,106 @@ extension WeatherViewController: CLLocationManagerDelegate{
         // then you can use $0.horizontalAccuracy <= manager.desiredAccuracy. Otherwise enter the number of meters desired.
         if let location = locations.first(where: { $0.horizontalAccuracy <= 50 }) {
             print("location found: \(location)")
-            self.performLocationUpdate(location: locationManager.location)
+            performLocationUpdate(location: locationManager.location)
             // stop updating Location if you don't need any more updates
             manager.stopUpdatingLocation()
-        }else{
+        } else {
             showAlert(message: AppMessages.noLocationFound)
         }
     }
-    
-    private func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        //Show Alert that Not able to fetch User's Location
+
+    private func locationManager(
+        _: CLLocationManager,
+        didFailWithError error: Error
+    ) {
         showAlert(message: error.localizedDescription)
     }
 }
 
+// MARK: - LocationInputProtocol
 
-
-// MARK: - User's Location Choice Handling
-extension WeatherViewController: LocationInputProtocol{
+extension WeatherViewController: SearchBarContainerViewDelegate {
     
-    
-    /// Request User's Location
     func userSelectedMyLocation() {
         requestLocationAccess()
     }
-    
-    /// Open City List
-    func openCityList() {
-        let cityPickerVC = self.storyboard!.instantiateViewController(withIdentifier: "CityListViewController") as! CityListViewController
-        cityPickerVC.delegate = self
-        self.pushVC(destinationVC: cityPickerVC)
-    }
-    
-    /// User's Search for location
-    /// - Parameter location: location search key
+
     func userSearchedLocation(location: String) {
         locationManager.stopUpdatingLocation()
         if !location.trimmingCharacters(in: .whitespaces).isEmpty {
             getWeatherForSearchLocation(location: location)
-        }else{
-            self.showAlert(message: AppMessages.selectLocation)
+        } else {
+            showAlert(message: AppMessages.selectLocation)
         }
     }
-}
-
-// MARK: - City List's City Selection Handler
-extension WeatherViewController: CityListProtocol{
     
-    /// City Selected, Pass city id to handler
-    /// - Parameter cityId: City Id
-    func didSelectedCity(cityId: String) {
-        getWeatherForSelectedCity(cityId: cityId)
+    func reloadWeatherUI() {
+        if weatherViewModel.weatherModel.value?.weather != nil {
+            hideNoDataView()
+            searchBarContainerView.closeKeyboard(isClear: true)
+        } else {
+            showNoDataView()
+        }
+        tableView.reloadData()
     }
 }
 
-
-
 // MARK: - Web Service Calling
+
 extension WeatherViewController {
     
     /// Get Weather information for User's Location as in Lat & Lon
     /// - Parameter location: user's location
-    func getWeatherForAvailableLocation(location: User.Location){
+    func getWeatherForAvailableLocation(location: User.Location) {
         print("Lat:\(location.latitude!)")
         print("Lat:\(location.longitude!)")
         let lat = String(location.latitude)
         let lon = String(location.longitude)
-        let params : [String : String] = ["lat" : lat , "lon" : lon, "units" : User.shared.tempratureUnit.rawValue, "appid" : NetworkHelperConstants.weatherAPIKey]
+        let params: [String: String] = [
+            "lat": lat,
+            "lon": lon,
+            "units": User.shared.tempratureUnit.rawValue,
+            "appid": NetworkHelperConstants.weatherAPIKey
+        ]
         fetchWeather(params: params)
     }
     
-    /// Get Weather information for user's selected city
-    /// - Parameter cityId: id of the city
-    func getWeatherForSelectedCity(cityId: String){
-        let params : [String : String] = ["id" : cityId , "units" : User.shared.tempratureUnit.rawValue, "appid" : NetworkHelperConstants.weatherAPIKey]
+    func getWeatherForSelectedCity(cityId: String) {
+        let params: [String: String] = [
+            "id": cityId,
+            "units": User.shared.tempratureUnit.rawValue,
+            "appid": NetworkHelperConstants.weatherAPIKey
+        ]
         fetchWeather(params: params)
     }
-    
-    /// Get weather information for user's Searched Location
-    /// - Parameter location: user's search key
-    func getWeatherForSearchLocation(location: String){
-        let params : [String : String] = ["q" : location , "units" : User.shared.tempratureUnit.rawValue,"appid" : NetworkHelperConstants.weatherAPIKey]
+
+   
+    func getWeatherForSearchLocation(location: String) {
+        let params: [String: String] = [
+            "q": location,
+            "units": User.shared.tempratureUnit.rawValue,
+            "appid": NetworkHelperConstants.weatherAPIKey
+        ]
         fetchWeather(params: params)
     }
+
     
-    
-    /// Actually Fetches the Weather
-    /// - Parameter params: Parameters for fetching weather information
-    func fetchWeather(params: [String:String]){
-        
+    func fetchWeather(params: [String: String]) {
         if Reachability.shared.status == .connectedViaWiFi || Reachability.shared.status == .connectedViaCellular {
-        self.tblWeather.isHidden = false
-        self.tblWeather.showLoading(activityColor: .link)
-        weatherVM.fetchWeather(params: params) { result in
-            self.tblWeather.hideLoading()
-            switch result {
-            case .success(_):
-                let _ = HistoryProvider.writeWeatherHistory(weather: self.weatherVM.weatherModel.value)
-//                print("History Saved:\(saved ? "Yes" : "No")")
-                //No need to handle UI Updates here as whenever a new weather will be updated and the binding will take place and trigger UI Update
-            case .failure(let error):
-                self.showAlert(message: error.localizedDescription)
+            tableView.isHidden = false
+            tableView.showLoading(activityColor: .link)
+            weatherViewModel.fetchWeather(params: params) { result in
+                self.tableView.hideLoading()
+                switch result {
+                case .success:
+                    _ = HistoryProvider.writeWeatherHistory(weather: self.weatherViewModel.weatherModel.value)
+                // No need to handle UI Updates here as whenever a new weather will be updated and the binding will take place and trigger UI Update
+                case let .failure(error):
+                    self.showAlert(message: error.localizedDescription)
+                }
             }
-        }
-        }else{
-            self.showAlert(message: Error.network.localizedDescription)
+        } else {
+            showAlert(message: Error.network.localizedDescription)
         }
     }
 }

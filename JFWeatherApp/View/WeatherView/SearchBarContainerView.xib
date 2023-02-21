@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Image references" minToolsVersion="12.0"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -13,7 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="UYD-LW-ZK7" customClass="LocationInputView" customModule="JFWeatherApp">
+        <view contentMode="scaleToFill" id="UYD-LW-ZK7" customClass="SearchBarContainerView" customModule="JFWeatherApp">
             <rect key="frame" x="0.0" y="0.0" width="500" height="80"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -23,31 +22,8 @@
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="CvM-IV-ekG">
                             <rect key="frame" x="20" y="5" width="460" height="70"/>
                             <subviews>
-                                <button toolTip="My Current Location" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jZ7-yb-erW">
-                                    <rect key="frame" x="0.0" y="15" width="89" height="40"/>
-                                    <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
-                                    <accessibility key="accessibilityConfiguration" hint="Select My Current Location" identifier="MyCurrentLocation" label="MyCurrentLocation"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="40" id="WWl-Zm-F6a"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
-                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                    <state key="normal" title="My">
-                                        <color key="titleColor" systemColor="labelColor"/>
-                                        <imageReference key="image" image="location.fill.viewfinder" catalog="system" symbolScale="large"/>
-                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
-                                    </state>
-                                    <state key="selected" title="My">
-                                        <color key="titleColor" name="AccentColor"/>
-                                        <imageReference key="image" image="location.square.fill" catalog="system" symbolScale="large"/>
-                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="myLocationButtonTap:" destination="UYD-LW-ZK7" eventType="touchUpInside" id="V9c-rm-s2Q"/>
-                                    </connections>
-                                </button>
                                 <textField toolTip="Search Location" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder=" Select Location" clearsOnBeginEditing="YES" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="3au-xs-KOD">
-                                    <rect key="frame" x="99" y="15" width="262" height="40"/>
+                                    <rect key="frame" x="0.0" y="22.5" width="309.5" height="25.5"/>
                                     <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                                     <accessibility key="accessibilityConfiguration" hint="User Search Location" identifier="TextLocation" label="TextLocation"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
@@ -57,31 +33,23 @@
                                     </connections>
                                 </textField>
                                 <button toolTip="Search Fron City" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gKB-lm-Vwc">
-                                    <rect key="frame" x="371" y="15" width="89" height="40"/>
+                                    <rect key="frame" x="319.5" y="22.5" width="140.5" height="25.5"/>
                                     <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                                     <accessibility key="accessibilityConfiguration" hint="Search City" identifier="CityButton" label="City"/>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                    <state key="normal" title="City">
+                                    <state key="normal" title="city">
                                         <color key="titleColor" systemColor="labelColor"/>
                                         <imageReference key="image" image="location.magnifyingglass" catalog="system" symbolScale="large"/>
                                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
                                     </state>
-                                    <state key="selected" title="City">
+                                    <state key="selected">
                                         <color key="titleColor" systemColor="linkColor"/>
                                         <imageReference key="image" image="magnifyingglass.circle.fill" catalog="system" symbolScale="large"/>
                                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
                                     </state>
-                                    <connections>
-                                        <action selector="searchButtonTap:" destination="UYD-LW-ZK7" eventType="touchUpInside" id="7ow-y8-pjw"/>
-                                    </connections>
                                 </button>
                             </subviews>
-                            <constraints>
-                                <constraint firstItem="3au-xs-KOD" firstAttribute="height" secondItem="jZ7-yb-erW" secondAttribute="height" id="qBs-gn-jrP"/>
-                                <constraint firstItem="gKB-lm-Vwc" firstAttribute="width" secondItem="jZ7-yb-erW" secondAttribute="width" id="seh-q0-eys"/>
-                                <constraint firstItem="gKB-lm-Vwc" firstAttribute="height" secondItem="jZ7-yb-erW" secondAttribute="height" id="wyi-1p-TRs"/>
-                            </constraints>
                         </stackView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -121,22 +89,16 @@
             <nil key="simulatedBottomBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
-                <outlet property="btnMyLocation" destination="jZ7-yb-erW" id="02L-wp-r4B"/>
-                <outlet property="btnSearch" destination="gKB-lm-Vwc" id="gOt-k2-fuF"/>
                 <outlet property="hstackInputViews" destination="CvM-IV-ekG" id="zkC-4n-lHR"/>
-                <outlet property="txtLocation" destination="3au-xs-KOD" id="7UI-Ko-yMr"/>
+                <outlet property="locationSearchTextField" destination="3au-xs-KOD" id="7UI-Ko-yMr"/>
+                <outlet property="searchButton" destination="gKB-lm-Vwc" id="gOt-k2-fuF"/>
             </connections>
-            <point key="canvasLocation" x="-188" y="-666"/>
+            <point key="canvasLocation" x="-559" y="-771"/>
         </view>
     </objects>
     <resources>
-        <image name="location.fill.viewfinder" catalog="system" width="128" height="115"/>
         <image name="location.magnifyingglass" catalog="system" width="128" height="117"/>
-        <image name="location.square.fill" catalog="system" width="128" height="114"/>
         <image name="magnifyingglass.circle.fill" catalog="system" width="128" height="123"/>
-        <namedColor name="AccentColor">
-            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <systemColor name="labelColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
