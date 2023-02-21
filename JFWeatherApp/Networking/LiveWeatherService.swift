@@ -40,9 +40,9 @@ protocol WeatherServiceProtocol {
 final class LiveWeatherService: NSObject, WeatherServiceProtocol {
     
     private struct Constants {
-        static let baseURLString = String(describing: AppUtility.infoForKey(for: "WEATHER_BASE_URL")).trimmingCharacters(in: .whitespacesAndNewlines)
+        static let baseURLString = "https://api.openweathermap.org/data/2.5/"
         static let weatherURLString = baseURLString + "weather"
-        static let weatherAPIKey = String(describing: AppUtility.infoForKey(for: "WEATHER_API_KEY")).trimmingCharacters(in: .whitespacesAndNewlines)
+        static let weatherAPIKey = "579ca2cb78c7464b12c279a722775c58"
     }
     private static let statusOK = 200
     

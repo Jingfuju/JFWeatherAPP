@@ -27,7 +27,6 @@
 		FE8323AF299B52F8000037B5 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = FE8323AE299B52F7000037B5 /* README.md */; };
 		FE84D8EC2995408A00758E35 /* AppObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8EB2995408A00758E35 /* AppObserver.swift */; };
 		FE84D8EE299540AB00758E35 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8ED299540AB00758E35 /* Constants.swift */; };
-		FE84D8F62995419700758E35 /* Other.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8F12995419600758E35 /* Other.swift */; };
 		FE84D8F72995419700758E35 /* ImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8F22995419600758E35 /* ImageViewExtension.swift */; };
 		FE84D8FA2995419700758E35 /* UIView+Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8F52995419700758E35 /* UIView+Loading.swift */; };
 		FE84D8FD2995431B00758E35 /* NoDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE84D8FC2995431B00758E35 /* NoDataView.swift */; };
@@ -77,7 +76,6 @@
 		FE8323AE299B52F7000037B5 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		FE84D8EB2995408A00758E35 /* AppObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppObserver.swift; sourceTree = "<group>"; };
 		FE84D8ED299540AB00758E35 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		FE84D8F12995419600758E35 /* Other.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Other.swift; sourceTree = "<group>"; };
 		FE84D8F22995419600758E35 /* ImageViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewExtension.swift; sourceTree = "<group>"; };
 		FE84D8F52995419700758E35 /* UIView+Loading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Loading.swift"; sourceTree = "<group>"; };
 		FE84D8FC2995431B00758E35 /* NoDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataView.swift; sourceTree = "<group>"; };
@@ -166,7 +164,6 @@
 			children = (
 				FE84D8F52995419700758E35 /* UIView+Loading.swift */,
 				FE84D8F22995419600758E35 /* ImageViewExtension.swift */,
-				FE84D8F12995419600758E35 /* Other.swift */,
 				FE69B55D299A37B00088A1C2 /* Reachability.swift */,
 			);
 			path = Utilities;
@@ -449,7 +446,6 @@
 				FE84D8EE299540AB00758E35 /* Constants.swift in Sources */,
 				FE69B55E299A37B10088A1C2 /* Reachability.swift in Sources */,
 				FE226D492997B6A800BF4095 /* Location.swift in Sources */,
-				FE84D8F62995419700758E35 /* Other.swift in Sources */,
 				FE84D8FA2995419700758E35 /* UIView+Loading.swift in Sources */,
 				FE0E08F1299B1E6C00EFD79B /* HistoryProvider.swift in Sources */,
 				A512F05829A44F3500AE62EA /* WeatherView.swift in Sources */,
@@ -645,8 +641,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				WEATHER_API_KEY = 579ca2cb78c7464b12c279a722775c58;
-				WEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5/";
 			};
 			name = Debug;
 		};
@@ -678,8 +672,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				WEATHER_API_KEY = 579ca2cb78c7464b12c279a722775c58;
-				WEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5/";
 			};
 			name = Release;
 		};

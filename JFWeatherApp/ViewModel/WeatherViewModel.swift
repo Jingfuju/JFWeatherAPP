@@ -7,7 +7,18 @@
 
 import Foundation
 
+// DateFormatter is computed consuming.
+// Global variable is lazily initiated.
+private var dateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "EEE, dd MMMM YYYY, hh:mm a"
+    dateFormatter.timeZone = TimeZone(identifier: "PST")
+    return dateFormatter
+}()
+
 class WeatherViewModel {
+    
+    
     
     // MARK: - Properties
     
@@ -30,6 +41,7 @@ class WeatherViewModel {
     private let imageURLString = "https://openweathermap.org/img/wn/"
     
     // MARK: - Initializer
+    
     init(
         weatherModel: Weather
     ) {
@@ -61,10 +73,10 @@ class WeatherViewModel {
             var timestampe = timeData
             let timezoneDiff = timeData
             timestampe += timezoneDiff
-            let weatherDate = timestampe.fromUnixTimeStamp()
-            date = " \(weatherDate?.convertToString(format: Constants.DateFormat_Long) ?? "")"
+            let weatherDate = Date(timeIntervalSince1970: TimeInterval(timestampe))
+            date = dateFormatter.string(from: weatherDate)
         } else {
-            date = " \(Date().convertToString(format: Constants.DateFormat_Long))"
+            date = dateFormatter.string(from: Date())
         }
         dateLabelText = date
         
