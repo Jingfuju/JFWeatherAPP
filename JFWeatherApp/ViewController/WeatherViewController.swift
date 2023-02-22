@@ -35,7 +35,6 @@ class WeatherViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    
         setupView()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -43,11 +42,11 @@ class WeatherViewController: UIViewController {
     }
 
     func setupView() {
-        
         showNoDataView()
-        self.navigationController?.isNavigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = false
 
-
+//        self.navigationController
+        
         tableView.dataSource = self
         tableView.tableHeaderView = searchBarContainerView
         
@@ -69,7 +68,6 @@ class WeatherViewController: UIViewController {
         searchBarContainerView.delegate = self
         searchBarContainerView.bind(with: weatherViewModel)
         Reachability.shared.startMonitoring()
-        //        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged(_:)), name:  Reachability.connectionStatusHasChangedNotification, object: nil)
     }
 }
 
@@ -240,18 +238,21 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
         }
         tableView.reloadData()
     }
-}
-
-// MARK: - Web Service Calling
-
-extension WeatherViewController {
     
     func createContextMenu() -> UIMenu {
         var menuList = [UIAction]()
-        guard let historyList = HistoryProvider.readWeatherHistory() else {
+        guard
+            let historyList = HistoryProvider.readWeatherHistory()
+        else {
             let noHisotryAction = UIAction(title: AppMessages.NoWeatherHistoryMessage, image: UIImage(systemName: "list.number")) { _ in
             }
-            return UIMenu(title: AppMessages.WeatherHistoryTitle, image: nil, identifier: .edit, options: .singleSelection, children: [noHisotryAction])
+            return UIMenu(
+                title: AppMessages.WeatherHistoryTitle,
+                image: nil,
+                identifier: .edit,
+                options: .singleSelection,
+                children: [noHisotryAction]
+            )
         }
 
         menuList = historyList.enumerated().map { index, weather in
@@ -289,3 +290,4 @@ extension WeatherViewController {
         )
     }
 }
+

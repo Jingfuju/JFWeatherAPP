@@ -9,15 +9,25 @@ import Foundation
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    
+    var mainCoordinator: MainCoordinator?
     var window: UIWindow?
-    func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options _: UIScene.ConnectionOptions) {
+    
+    func scene(
+        _ scene: UIScene,
+        willConnectTo _: UISceneSession,
+        options _: UIScene.ConnectionOptions
+    ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let window = UIWindow(windowScene: windowScene)
+        
         let storyboard = UIStoryboard(name: String(describing: WeatherView.self), bundle: nil)
-        window.rootViewController = storyboard.instantiateViewController(
-            withIdentifier: String(describing: WeatherViewController.self)
-        ) as! WeatherViewController
+        let navigationViewController = UINavigationController()
+        mainCoordinator = MainCoordinator(presenter: navigationViewController)
+        mainCoordinator?.start()
+        
+        let window = UIWindow(windowScene: windowScene)
+        window.rootViewController = navigationViewController
         window.makeKeyAndVisible()
         self.window = window
     }

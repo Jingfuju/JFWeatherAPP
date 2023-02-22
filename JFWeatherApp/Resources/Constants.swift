@@ -9,24 +9,21 @@ import Foundation
 
 struct Constants {
     static let LoadingIndicatorTag = 961_942
-    static let DateFormat_Short = "YYYY-MM-DD"
-    static let DateFormat_Long = "EEE, dd MMMM YYYY, hh:mm a"
     static let NodataViewSize = 200
     static let AnimationDuration = 0.25
     static let WeatherCellId = "MyWeatherCell"
     static let MaxHistoryCount = 5
 }
 
-// can be better implemented with Localisation
+// TODO: - can be better implemented with Localization
 enum AppMessages {
     static let defaultError: String = "Something went wrong! Please try again later."
     static let selectLocation: String = "Please select location"
-    static let searchLocation: String = "Please search location"
+    static let searchLocation: String = "Search for a city"
     static let noLocationFound: String = "No location found!"
     static let Refresh: String = "Refresh"
     static let AppTitle: String = "Weather App"
     static let searchCity: String = "Search city"
-    static let cityList = "City List"
     static let WeatherHistoryTitle = "Weather History"
     static let NoWeatherHistoryMessage = "No history found"
     static let ClearHistoryTitle = "Clear History"

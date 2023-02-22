@@ -28,7 +28,6 @@ class SearchBarContainerView: UIView {
         }
     }
 
-//    @IBOutlet var locationButton: UIButton!
     @IBOutlet var hstackInputViews: UIStackView! {
         didSet {
             hstackInputViews.isAccessibilityElement = false

@@ -8,7 +8,6 @@
 import Foundation
 
 
-
 extension UserDefaults {
     var WeatherHistory: [[String: String]] {
         get { array(forKey: #function) as? [[String: String]] ?? [] }
