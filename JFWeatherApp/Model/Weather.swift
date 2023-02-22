@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - Weather
+// MARK: - Weather Data Model
 
 struct Weather: Codable {
     let coordinate: Coordinate?

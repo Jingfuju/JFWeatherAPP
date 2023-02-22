@@ -1,8 +1,8 @@
 //
-//  File1.swift
-//  AUWeatherApp
+//  UIView+Loading.swift
+//  JFWeatherApp
 //
-//  Created by Anand Upadhyay on 09/02/23.
+//  Created by Jingfu Ju on 2/22/23.
 //
 
 import Foundation
@@ -20,11 +20,17 @@ extension UIView {
         }
     }
 
-    /// Add A loading Indicator in View
-    /// - Parameters:
-    ///   - activityColor: color of the activity indicator
-    ///   - interactionEnabled: interaction on / off default is false
-    ///   - backgroundColor: backgournd color of the loading indicator default is UIColor.systemGroupedBackground
+    /**
+     
+     Add A loading Indicator in View.
+     
+     - Parameters:
+        - activityColor: color of the activity indicator.
+        - interactionEnabled: interaction on / off default is false.
+        - backgroundColor:  backgournd color of the loading indicator default is UIColor.systemGroupedBackground
+     
+     */
+     
     func showLoading(activityColor: UIColor, interactionEnabled: Bool = false, backgroundColor: UIColor = .systemGroupedBackground) {
         let backgroundView = UIView()
         backgroundView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
@@ -65,3 +71,4 @@ extension UIView {
         return nib.first as! T
     }
 }
+

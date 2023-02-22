@@ -21,7 +21,7 @@ class WeatherView: UIView {
     @IBOutlet private var dateLabel: UILabel!
     @IBOutlet private var weatherDescriptionLabel: UILabel!
     @IBOutlet private var temperatureLabel: UILabel!
-    @IBOutlet var weatherImage: MyExtendedImage!
+    @IBOutlet var weatherImage: JFImageView!
 
     
     func update(with viewModel: WeatherViewModel) {

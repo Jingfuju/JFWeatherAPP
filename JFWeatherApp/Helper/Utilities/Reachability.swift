@@ -1,8 +1,8 @@
 //
 //  Reachability.swift
-//  AUWeatherApp
+//  JFWeatherApp
 //
-//  Created by Anand Upadhyay on 13/02/23.
+//  Created by Jingfu Ju on 2/22/23.
 //
 
 import Foundation

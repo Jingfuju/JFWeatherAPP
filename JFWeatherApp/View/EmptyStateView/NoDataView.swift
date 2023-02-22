@@ -9,34 +9,40 @@ import Foundation
 import UIKit
 
 class NoDataView: UIView {
+    
     // MARK: - IBOutlet
 
     @IBOutlet private var contentView: UIView!
-    @IBOutlet private var lblNoData: UILabel!
+    @IBOutlet private var noDataLabel: UILabel!
 
+    // MARK: - Initializer
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    // MARK: - Methods
+    
     func setupNoDataView() {
         contentView.removeFromSuperview()
         addSubview(contentView)
-        lblNoData.text = AppMessages.noLocationFound
+        noDataLabel.text = AppMessages.noLocationFound
     }
 
     func setupSelectLocatin() {
         contentView.removeFromSuperview()
         addSubview(contentView)
-        lblNoData.text = AppMessages.selectLocation
+        noDataLabel.text = AppMessages.selectLocation
     }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
+    
+    // MARK: - Privates
 
     private func commonInit() {
         UIView.fromNib()
-        lblNoData.text = AppMessages.noLocationFound
+        noDataLabel.text = AppMessages.noLocationFound
         addSubview(contentView)
     }
 }

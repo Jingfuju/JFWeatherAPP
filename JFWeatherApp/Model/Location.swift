@@ -1,14 +1,14 @@
 //
 //  Location.swift
-//  AUWeatherApp
+//  JFWeatherApp
 //
-//  Created by Anand Upadhyay on 11/02/23.
+//  Created by Jingfu Ju on 2/22/23.
 //
 
 import Foundation
 
 // MARK: - Location
-
+// TODO: - User Singleton is not well used by the JFWeatherApp, but I still plan to keep for future.
 class User {
     static var shared = User()
     var tempratureUnit: TemperatureFormat = .Celsius // User's temprature Unit
@@ -34,3 +34,4 @@ enum TemperatureFormat: String {
 struct NoCity: Codable {
     let cod, message: String?
 }
+

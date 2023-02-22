@@ -1,8 +1,8 @@
 //
-//  File1.swift
-//  AUWeatherApp
+//  JFImageView.swift
+//  JFWeatherApp
 //
-//  Created by Anand Upadhyay on 09/02/23.
+//  Created by Jingfu Ju on 2/22/23.
 //
 
 import Foundation
@@ -10,7 +10,7 @@ import UIKit
 
 let imageCache = NSCache<AnyObject, AnyObject>()
 
-class MyExtendedImage: UIImageView {
+class JFImageView: UIImageView {
     var imageURL: URL?
 
     let activityIndicator = UIActivityIndicatorView()
@@ -18,7 +18,6 @@ class MyExtendedImage: UIImageView {
     /// Download an image from URL with caching
     /// - Parameter url: url of the image to be downloaded
     func loadImageWithURL(_ url: URL) {
-        // setup Activity Indicator
         activityIndicator.color = .darkGray
         addSubview(activityIndicator)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -34,9 +33,7 @@ class MyExtendedImage: UIImageView {
             return
         }
 
-
         URLSession.shared.dataTask(with: url, completionHandler: { data, _, error in
-
             if error != nil {
                 print(error as Any)
                 DispatchQueue.main.async {

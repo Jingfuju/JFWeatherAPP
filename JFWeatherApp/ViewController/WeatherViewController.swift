@@ -138,8 +138,8 @@ private extension WeatherViewController {
                 let weatherArray = HistoryProvider.readWeatherHistory(),
                     weatherArray.count > 0
             {
-                weatherService.fetchLocationWeather(
-                    location: weatherArray[0].name!,
+                weatherService.fetchCityNameWeather(
+                    cityName: weatherArray[0].name!,
                     completion: {[weak self] weatherServiceResult in
                         if case let .success(weather) = weatherServiceResult {
                             self?.weatherViewModel = WeatherViewModel(weatherModel: weather)
@@ -152,12 +152,19 @@ private extension WeatherViewController {
     
     /**
      
-        Handle Location after received from Location Manager.
+        Handle Location Search with its coordinator after received from Location Manager.
      
         - Parameter location: optional CLLocation
      
      */
     private func updateWeather(of location: CLLocation?) {
+        guard isReachable else {
+            showAlert(message: "Network Error")
+            return
+        }
+            
+        tableView.isHidden = false
+        tableView.showLoading(activityColor: .link)
         if let location = location {
             User.Location.shared.latitude = location.coordinate.latitude
             User.Location.shared.longitude = location.coordinate.longitude
@@ -166,6 +173,7 @@ private extension WeatherViewController {
                 coordinate: User.Location.shared,
                 completion: { [weak self] weatherServiceResult in
                     guard let self = self else { return }
+                    self.tableView.hideLoading()
                     switch weatherServiceResult {
                     case let .success(weather):
                         self.weatherViewModel = WeatherViewModel(weatherModel: weather)
@@ -177,13 +185,29 @@ private extension WeatherViewController {
         }
     }
     
+    /**
+     
+        Handle Location Search with city name after received from Location Manager.
+     
+        - Parameter location: the String of City Name
+     
+     */
     private func userSearchedLocation(location: String) {
         locationManager.stopUpdatingLocation()
+        
+        guard isReachable else {
+            showAlert(message: "Network Error")
+            return
+        }
+            
+        tableView.isHidden = false
+        tableView.showLoading(activityColor: .link)
         if !location.trimmingCharacters(in: .whitespaces).isEmpty {
-            weatherService.fetchLocationWeather(
-                location: location,
+            weatherService.fetchCityNameWeather(
+                cityName: location,
                 completion: { [weak self] weatherServiceResult in
                     guard let self = self else { return }
+                    self.tableView.hideLoading()
                     switch weatherServiceResult {
                     case let .success(weather):
                         self.weatherViewModel = WeatherViewModel(weatherModel: weather)
@@ -195,6 +219,11 @@ private extension WeatherViewController {
         } else {
             showAlert(message: AppMessages.selectLocation)
         }
+    }
+    
+    private var isReachable: Bool {
+        Reachability.shared.status == .connectedViaWiFi
+        || Reachability.shared.status == .connectedViaCellular
     }
     
     private func reloadWeatherUI() {
@@ -230,8 +259,8 @@ private extension WeatherViewController {
                 identifier: UIAction.Identifier("HistoryMenu\(index + 1)")
             ) { [weak self] action in
                 guard let self = self else { return }
-                self.weatherService.fetchLocationWeather(
-                    location: weather.name!,
+                self.weatherService.fetchCityNameWeather(
+                    cityName: weather.name!,
                     completion: {[weak self] weatherServiceResult in
                         guard let self = self else { return }
                         switch weatherServiceResult {

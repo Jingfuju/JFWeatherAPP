@@ -1,8 +1,8 @@
 //
-//  AppConstants.swift
-//  AUWeatherApp
+//  Constants.swift
+//  JFWeatherApp
 //
-//  Created by Anand Upadhyay on 09/02/23.
+//  Created by Jingfu Ju on 2/22/23.
 //
 
 import Foundation
@@ -39,3 +39,4 @@ enum AppMessages {
 enum AppKeys {
     static let WeatherList = "WeatherList"
 }
+

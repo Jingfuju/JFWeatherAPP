@@ -35,17 +35,12 @@ final class WeatherViewModel {
     var temperatureLabelText: String
     var weatherImageURLString: String
 
-//    let weatherModelObserver: AppObserver<Weather?> = AppObserver(nil)
-    
-    
-    
     // MARK: - Initializer
     
     init(
         weatherModel: Weather
     ) {
         self.weatherModel = weatherModel
-//        weatherModelObserver.value = weatherModel
         
         cityLabelText = weatherModel.name ?? ""
         countryLabelText = weatherModel.sys?.country ?? ""

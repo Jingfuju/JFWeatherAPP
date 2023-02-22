@@ -19,19 +19,49 @@ typealias WeatherServiceResult = Result<Weather, WeatherServiceError>
 
 protocol WeatherServiceProtocol {
     
+    /**
+     
+    Fetch the weather infomation by coorinate.
+     
+    - Parameters:
+        - coordinate:  the coorinate information.
+        - completion: @escaping closure with Result type as input value.
+        success data is Weather data model and failure data is binded to the WeatherServiceError.
+                                    
+     */
     func fetchCoordinateWeather(
         coordinate: User.Location,
         completion: @escaping (WeatherServiceResult) -> Void
     )
     
+    /**
+     
+    Fetch the weather infomation by cityID String.
+     
+    - Parameters:
+        - cityID:  the cityID String.
+        - completion: @escaping closure with Result type as input value.
+        success data is Weather data model and failure data is binded to the WeatherServiceError.
+                                    
+     */
     func fetchCityWeather(
         cityID: String,
         completion: @escaping (WeatherServiceResult) -> Void
     )
     
     
-    func fetchLocationWeather(
-        location: String,
+    /**
+     
+    Fetch the weather infomation by cityName String.
+     
+    - Parameters:
+        - cityName:  the cityID String.
+        - completion: @escaping closure with Result type as input value.
+        success data is Weather data model and failure data is binded to the WeatherServiceError.
+                                    
+     */
+    func fetchCityNameWeather(
+        cityName: String,
         completion: @escaping (WeatherServiceResult) -> Void
     )
 }
@@ -85,19 +115,19 @@ final class LiveWeatherService: NSObject, WeatherServiceProtocol {
         fetchWeather(params: params, completion: completion)
     }
     
-    func fetchLocationWeather(
-        location: String,
+    func fetchCityNameWeather(
+        cityName: String,
         completion: @escaping (WeatherServiceResult) -> Void
     ) {
         let params: [String: String] = [
-            "q": location,
+            "q": cityName,
             "units": User.shared.tempratureUnit.rawValue,
             "appid": Constants.weatherAPIKey
         ]
         fetchWeather(params: params, completion: completion)
     }
 
-    func fetchWeather(
+    private func fetchWeather(
         params: [String: String],
         completion: @escaping (WeatherServiceResult) -> Void
     ) {
