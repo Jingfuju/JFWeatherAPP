@@ -97,8 +97,6 @@ final class LiveWeatherService: NSObject, WeatherServiceProtocol {
         let params: [String: String] = [
             "lat": String(coordinate.latitude),
             "lon": String(coordinate.longitude),
-            "units": User.shared.tempratureUnit.rawValue,
-            "appid": Constants.weatherAPIKey
         ]
         fetchWeather(params: params, completion: completion)
     }
@@ -107,11 +105,7 @@ final class LiveWeatherService: NSObject, WeatherServiceProtocol {
         cityID: String,
         completion: @escaping (WeatherServiceResult) -> Void
     ) {
-        let params: [String: String] = [
-            "id": cityID,
-            "units": User.shared.tempratureUnit.rawValue,
-            "appid": Constants.weatherAPIKey
-        ]
+        let params: [String: String] = ["id": cityID]
         fetchWeather(params: params, completion: completion)
     }
     
@@ -119,11 +113,7 @@ final class LiveWeatherService: NSObject, WeatherServiceProtocol {
         cityName: String,
         completion: @escaping (WeatherServiceResult) -> Void
     ) {
-        let params: [String: String] = [
-            "q": cityName,
-            "units": User.shared.tempratureUnit.rawValue,
-            "appid": Constants.weatherAPIKey
-        ]
+        let params: [String: String] = [ "q": cityName]
         fetchWeather(params: params, completion: completion)
     }
 
@@ -131,6 +121,10 @@ final class LiveWeatherService: NSObject, WeatherServiceProtocol {
         params: [String: String],
         completion: @escaping (WeatherServiceResult) -> Void
     ) {
+        var params = params
+        params["units"] = User.shared.tempratureUnit.rawValue
+        params["appid"] = Constants.weatherAPIKey
+        
         networkService.startNetworkTask(
             query: Constants.weatherURLString,
             params: params
