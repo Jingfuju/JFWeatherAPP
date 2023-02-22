@@ -21,7 +21,7 @@ class WeatherViewController: UIViewController {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 self?.reloadWeatherUI()
-                self?.searchBarContainerView.searchButton.menu = self?.createContextMenu()
+                self?.rightBarButtonItem.menu = self?.createContextMenu()
             }
         }
     }
@@ -36,7 +36,25 @@ class WeatherViewController: UIViewController {
         noDataView.setupSelectLocatin()
         return noDataView
     }()
-    let searchBarContainerView: SearchBarContainerView = .fromNib()
+    
+    private lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar(frame: CGRectMake(0, 0, 300, 20))
+        searchBar.delegate = self
+        searchBar.placeholder = " \(AppMessages.searchLocation)"
+        searchBar.accessibilityIdentifier = "SearchBar"
+        return searchBar
+    }()
+    
+    private lazy var rightBarButtonItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(
+            image: UIImage(systemName: "list.number"),
+            style: .done,
+            target: self,
+            action: nil
+        )
+        item.menu = createContextMenu()
+        return item
+    }()
 
     // MARK: - Lift Cycle
 
@@ -46,42 +64,42 @@ class WeatherViewController: UIViewController {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         requestLocationAccess()
+        
     }
 
     private func setupView() {
         showNoDataView()
-        self.navigationController?.isNavigationBarHidden = true
+        configureNavigationBar()
         tableView.dataSource = self
-        addSearchBar()
         Reachability.shared.startMonitoring()
     }
     
-    private func addSearchBar() {
-        searchBarContainerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(searchBarContainerView)
-        view.bringSubviewToFront(searchBarContainerView)
-        let searchBarConstrants = [
-            searchBarContainerView.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor,
-                constant: 0
-            ),
-            searchBarContainerView.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 0
-            ),
-            searchBarContainerView.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                constant: 0
-            )
-        ]
-        NSLayoutConstraint.activate(searchBarConstrants)
-        searchBarContainerView.delegate = self
-//        searchBarContainerView.bind(with: weatherViewModel)
-        searchBarContainerView.searchButton.menu = createContextMenu()
+    private func configureNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: searchBar)
+        navigationItem.rightBarButtonItem = rightBarButtonItem
+    }
+}
+
+// MARK: - UISearchBarDelegate
+
+extension WeatherViewController: UISearchBarDelegate {
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        closeKeyboard(isClear: false)
+        userSearchedLocation(location: searchBar.text ?? "")
+    }
+    
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        return true
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        closeKeyboard(isClear: false)
+        userSearchedLocation(location: searchBar.text ?? "")
     }
 }
 
 // MARK: - Privates
+
 private extension WeatherViewController {
     private func showAlert(message: String) {
         let alertController = UIAlertController(
@@ -101,9 +119,15 @@ private extension WeatherViewController {
         view.bringSubviewToFront(noDataView)
     }
 
-    /// Hide No Data View
     private func hideNoDataView() {
         noDataView.removeFromSuperview()
+    }
+    
+    private func closeKeyboard(isClear: Bool) {
+        searchBar.resignFirstResponder()
+        if isClear {
+            searchBar.text = ""
+        }
     }
 }
 
@@ -176,10 +200,8 @@ extension WeatherViewController: CLLocationManagerDelegate {
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
-        case .restricted:
-            print("Sorry, restricted")
-        case .denied:
-            print("Sorry, denied")
+        case .restricted, .denied:
+            assertionFailure("Location Service restricted or denied!!")
         case .authorizedAlways, .authorizedWhenInUse:
             manager.startUpdatingLocation()
         @unknown default:
@@ -212,7 +234,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
 
 // MARK: - LocationInputProtocol
 
-extension WeatherViewController: SearchBarContainerViewDelegate {
+extension WeatherViewController {
     
     func userSelectedMyLocation() {
         requestLocationAccess()
@@ -241,7 +263,7 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
     func reloadWeatherUI() {
         if weatherViewModel?.weatherModelObserver.value?.weather != nil {
             hideNoDataView()
-            searchBarContainerView.closeKeyboard(isClear: true)
+            closeKeyboard(isClear: true)
         } else {
             showNoDataView()
         }
@@ -299,7 +321,7 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
         ) { [weak self] _ in
             guard let self = self else { return }
             HistoryProvider.clearWeatherHistory()
-            self.searchBarContainerView.searchButton.menu = self.createContextMenu()
+            self.rightBarButtonItem.menu = self.createContextMenu()
         }
         menuList.append(clearHistory)
 
