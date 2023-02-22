@@ -7,25 +7,6 @@
 
 import Foundation
 
-//protocol ErrorProtocol: LocalizedError {
-//    var title: String? { get }
-//    var code: Int { get }
-//}
-//
-//struct NetworkError: ErrorProtocol {
-//    var title: String?
-//    var code: Int
-//    var errorDescription: String? { return _description }
-//    var failureReason: String? { return _description }
-//
-//    private var _description: String
-//
-//    init(title: String?, description: String, code: Int) {
-//        self.title = title ?? "Error"
-//        _description = description
-//        self.code = code
-//    }
-//}
 
 enum NetworkError: Error, LocalizedError {
     case malformedQuery
@@ -52,16 +33,30 @@ enum NetworkError: Error, LocalizedError {
 }
 
 
-
-
-
+/**
+ 
+    The Network layer protocol to handle the API call.
+ 
+ */
 protocol NetworkServiceProtocol {
+    
+    /**
+            
+            Network call base on the URLSession.
+     
+     - Parameters:
+        - query: the String value representing the URL to the server end point.
+        - params:  the String to String dictionary value for the URL query items.
+        - completion: @escaping closure to call back the network data or enum value type NetworkError  to classify the mechanism failure reson.
+            
+     */
     func startNetworkTask(
         query: String,
         params: [String: String],
         completion: @escaping (Result<Data, NetworkError>) -> Void
     )
 }
+
 
 final class LiveNetworkService: NetworkServiceProtocol {
     
