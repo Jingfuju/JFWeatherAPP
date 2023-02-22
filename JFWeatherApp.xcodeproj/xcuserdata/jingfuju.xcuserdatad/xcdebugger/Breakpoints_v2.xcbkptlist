@@ -147,32 +147,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E25F2F78-0A98-4F31-96AE-E4E46EB3FBEF"
+            uuid = "257DBE5B-9F8D-46E2-B7CD-DF0035CAF215"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JFWeatherApp/ViewController/WeatherViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "199"
-            endingLineNumber = "199"
-            landmarkName = "locationManagerDidChangeAuthorization(_:)"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
+            landmarkName = "loadInitialWeatherInfo()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "27304702-888B-4F06-98D7-5C16148A5ED0"
+            uuid = "9E1458D0-03EA-4B81-A2BC-77C89832F9A2"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JFWeatherApp/ViewController/WeatherViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "215"
-            endingLineNumber = "215"
-            landmarkName = "locationManager(_:didFailWithError:)"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
+            landmarkName = "loadInitialWeatherInfo()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

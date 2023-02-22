@@ -61,7 +61,7 @@ class WeatherViewController: UIViewController {
         setupView()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        requestLocationAccess()
+        loadInitialWeatherInfo()
     }
 
     private func setupView() {
@@ -127,12 +127,26 @@ private extension WeatherViewController {
         }
     }
     
-    private func requestLocationAccess() {
-        if locationManager.authorizationStatus == .authorizedWhenInUse {
-            locationManager.startUpdatingLocation()
-        } else {
+    private func loadInitialWeatherInfo() {
+        if locationManager.authorizationStatus == .denied
+            || locationManager.authorizationStatus == .restricted
+            || locationManager.authorizationStatus == .notDetermined
+        {
             locationManager.requestWhenInUseAuthorization()
-            locationManager.startUpdatingLocation()
+        } else {
+            if
+                let weatherArray = HistoryProvider.readWeatherHistory(),
+                    weatherArray.count > 0
+            {
+                weatherService.fetchLocationWeather(
+                    location: weatherArray[0].name!,
+                    completion: {[weak self] weatherServiceResult in
+                        if case let .success(weather) = weatherServiceResult {
+                            self?.weatherViewModel = WeatherViewModel(weatherModel: weather)
+                        }
+                    }
+                )
+            }
         }
     }
     
@@ -161,6 +175,100 @@ private extension WeatherViewController {
                 }
             )
         }
+    }
+    
+    private func userSearchedLocation(location: String) {
+        locationManager.stopUpdatingLocation()
+        if !location.trimmingCharacters(in: .whitespaces).isEmpty {
+            weatherService.fetchLocationWeather(
+                location: location,
+                completion: { [weak self] weatherServiceResult in
+                    guard let self = self else { return }
+                    switch weatherServiceResult {
+                    case let .success(weather):
+                        self.weatherViewModel = WeatherViewModel(weatherModel: weather)
+                    case let .failure(_):
+                        break
+                    }
+                }
+            )
+        } else {
+            showAlert(message: AppMessages.selectLocation)
+        }
+    }
+    
+    private func reloadWeatherUI() {
+        if weatherViewModel != nil {
+            hideNoDataView()
+            closeKeyboard(isClear: true)
+        } else {
+            showNoDataView()
+        }
+        tableView.reloadData()
+    }
+    
+    private func createContextMenu() -> UIMenu {
+        var menuList = [UIAction]()
+        guard
+            let historyList = HistoryProvider.readWeatherHistory()
+        else {
+            let noHisotryAction = UIAction(
+                title: AppMessages.NoWeatherHistoryMessage,
+                image: UIImage(systemName: "list.number")) { _ in }
+            return UIMenu(
+                title: AppMessages.WeatherHistoryTitle,
+                image: nil,
+                identifier: .edit,
+                options: .singleSelection,
+                children: [noHisotryAction]
+            )
+        }
+
+        menuList = historyList.enumerated().map { index, weather in
+            UIAction(
+                title: weather.name!,
+                identifier: UIAction.Identifier("HistoryMenu\(index + 1)")
+            ) { [weak self] action in
+                guard let self = self else { return }
+                self.weatherService.fetchLocationWeather(
+                    location: weather.name!,
+                    completion: {[weak self] weatherServiceResult in
+                        guard let self = self else { return }
+                        switch weatherServiceResult {
+                        case let .success(weather):
+                            self.weatherViewModel = WeatherViewModel(weatherModel: weather)
+                        case let .failure(_):
+                            break
+                        }
+                })
+            }
+        }
+
+    
+        var removeRatingAttributes = UIMenuElement.Attributes.destructive
+        if historyList.count == 0 {
+            removeRatingAttributes.insert(.disabled)
+        }
+        let deleteImage = UIImage(systemName: "trash.fill")
+        let clearHistory = UIAction(
+            title: AppMessages.ClearHistoryTitle,
+            image: deleteImage,
+            identifier: UIAction.Identifier("ClearHisotyr"),
+            attributes: removeRatingAttributes
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            HistoryProvider.clearWeatherHistory()
+            self.rightBarButtonItem.menu = self.createContextMenu()
+        }
+        menuList.append(clearHistory)
+
+        return UIMenu(
+            title: AppMessages.WeatherHistoryTitle,
+            image: UIImage(systemName: "list.number"),
+            identifier: .edit,
+            options: .singleSelection,
+            children: menuList
+        )
     }
 }
 
@@ -226,106 +334,4 @@ extension WeatherViewController: CLLocationManagerDelegate {
             showAlert(message: AppMessages.noLocationFound)
         }
     }
-    
-    
 }
-
-// MARK: - LocationInputProtocol
-
-extension WeatherViewController {
-
-    func userSearchedLocation(location: String) {
-        locationManager.stopUpdatingLocation()
-        if !location.trimmingCharacters(in: .whitespaces).isEmpty {
-            weatherService.fetchLocationWeather(
-                location: location,
-                completion: { [weak self] weatherServiceResult in
-                    guard let self = self else { return }
-                    switch weatherServiceResult {
-                    case let .success(weather):
-                        self.weatherViewModel = WeatherViewModel(weatherModel: weather)
-                    case let .failure(_):
-                        break
-                    }
-                }
-            )
-        } else {
-            showAlert(message: AppMessages.selectLocation)
-        }
-    }
-    
-    func reloadWeatherUI() {
-        if weatherViewModel != nil {
-            hideNoDataView()
-            closeKeyboard(isClear: true)
-        } else {
-            showNoDataView()
-        }
-        tableView.reloadData()
-    }
-    
-    func createContextMenu() -> UIMenu {
-        var menuList = [UIAction]()
-        guard
-            let historyList = HistoryProvider.readWeatherHistory()
-        else {
-            let noHisotryAction = UIAction(
-                title: AppMessages.NoWeatherHistoryMessage,
-                image: UIImage(systemName: "list.number")) { _ in }
-            return UIMenu(
-                title: AppMessages.WeatherHistoryTitle,
-                image: nil,
-                identifier: .edit,
-                options: .singleSelection,
-                children: [noHisotryAction]
-            )
-        }
-
-        menuList = historyList.enumerated().map { index, weather in
-            UIAction(
-                title: weather.name!,
-                identifier: UIAction.Identifier("HistoryMenu\(index + 1)")
-            ) { [weak self] action in
-                guard let self = self else { return }
-                self.weatherService.fetchLocationWeather(
-                    location: weather.name!,
-                    completion: {[weak self] weatherServiceResult in
-                        guard let self = self else { return }
-                        switch weatherServiceResult {
-                        case let .success(weather):
-                            self.weatherViewModel = WeatherViewModel(weatherModel: weather)
-                        case let .failure(_):
-                            break
-                        }
-                })
-            }
-        }
-
-    
-        var removeRatingAttributes = UIMenuElement.Attributes.destructive
-        if historyList.count == 0 {
-            removeRatingAttributes.insert(.disabled)
-        }
-        let deleteImage = UIImage(systemName: "trash.fill")
-        let clearHistory = UIAction(
-            title: AppMessages.ClearHistoryTitle,
-            image: deleteImage,
-            identifier: UIAction.Identifier("ClearHisotyr"),
-            attributes: removeRatingAttributes
-        ) { [weak self] _ in
-            guard let self = self else { return }
-            HistoryProvider.clearWeatherHistory()
-            self.rightBarButtonItem.menu = self.createContextMenu()
-        }
-        menuList.append(clearHistory)
-
-        return UIMenu(
-            title: AppMessages.WeatherHistoryTitle,
-            image: UIImage(systemName: "list.number"),
-            identifier: .edit,
-            options: .singleSelection,
-            children: menuList
-        )
-    }
-}
-
