@@ -8,14 +8,28 @@
 import Foundation
 
 
+/**
+Provide the read, write and removeAll functionality for search city history list.
+ 
+ - Leverage the LRU (least recently used) data structure to handle the history list with at most 5 item.
+ - Used the NSUserDefault as the storage mechanism.
+ 
+ */
+
 class HistoryProvider {
-
-
-    /// Save Weather History in User default
-    /// - Parameter weather: Weather to be saved
-    /// - Returns: boolean indicating the success or failure
+    
+    /**
+     
+     Class method to save Weather History in the User default and at most 5 items are suppported.
+     The newly added item is always append to the head of the list. If we have more than 5 history, the last one will be removed from the storage.
+     
+      - Parameter weather: the Weather data model to be saved.
+      - Returns: boolean value indicating the success or failure of data persisient aciton.
+     
+     */
+    
+    @discardableResult
     class func writeWeatherHistory(weather: Weather) -> Bool {
-      
         var weatherList: [Weather]
         var weatherHistoryList: [Weather]?
         
@@ -50,9 +64,16 @@ class HistoryProvider {
             return false
         }
     }
+    
+    
+    /**
+     
+    Class method to Retrived the Weather History from saved User defaults
+     
+     - Returns: the Weather data model array. It will be nil, if we do not have the weather history or retrieving action failure.
+     
+     */
 
-    /// Read Weather History from User defaults
-    /// - Returns:  array of Weather [Weather]?
     class func readWeatherHistory() -> [Weather]? {
         var weatherList: [Weather]
         guard
@@ -68,117 +89,13 @@ class HistoryProvider {
         }
     }
 
-    /// Clear Weather History
-    /// - Returns: if able to clear history or not
+    /**
+        
+     Class method to clear the weather search history from data persistent.
+     
+     */
     class func clearWeatherHistory() {
         let userDefaults = UserDefaults.standard
         userDefaults.removeObject(forKey: AppKeys.WeatherList)
-    }
-}
-
-
-class LastedRecentUsedLocationCacheProvider {
-    
-    class Node {
-        var key: Int
-        var value: Int
-        var prev: Node?
-        var next: Node?
-        init(_ key: Int, _ value: Int) {
-            self.key = key
-            self.value = value
-        }
-    }
-    
-    var head: Node
-    var tail: Node
-    var size: Int
-    var capacity: Int
-    var dummy = Node(0, 0)
-    var cache = [Int: Node]()
-
-    init(_ capacity: Int) {
-        self.capacity = capacity
-        self.size = 0
-        self.cache.reserveCapacity(capacity)
-        head = dummy
-        tail = dummy
-    }
-    
-    fileprivate func remove(_ node: Node) {
-        
-        if size == 0 { return }
-        if size == 1 {
-            head = dummy
-            tail = dummy
-        } else {
-            if node === head {
-                
-                let next = head.next!
-                dummy.next = next
-                next.prev = dummy
-                head = next
-            } else if node === tail {
-                
-                let prev = node.prev!
-                prev.next = nil
-                tail = prev
-            } else {
-            
-                let next = node.next!
-                let prev = node.prev!
-                prev.next = next
-                next.prev = prev
-            }
-        }
-        
-        cache.removeValue(forKey: node.key)
-        size -= 1
-    }
-    
-    fileprivate func add(_ node: Node) {
-        
-        if size == 0 {
-            dummy.next = node
-            node.prev = dummy
-            head = node
-            tail = node
-        } else {
-            dummy.next = node
-            node.prev = dummy
-            node.next = head
-            head.prev = node
-            head = node
-        }
-        cache[node.key] = node
-        size += 1
-    }
-    
-    func get(_ key: Int) -> Int {
-        
-        guard size > 0 else { return -1 }
-        guard let node = cache[key] else{ return -1 }
-        defer {
-            remove(node)
-            add(node)
-        }
-        
-        return node.value
-    }
-    
-    func put(_ key: Int, _ value: Int) {
-        guard capacity > 0 else { return }
-        let node = cache[key]
-        if node == nil {
-            add(Node(key, value))
-            
-            if size > capacity {
-                remove(tail)
-            }
-        } else {
-            node!.value = value
-            remove(node!)
-            add(node!)
-        }
     }
 }
