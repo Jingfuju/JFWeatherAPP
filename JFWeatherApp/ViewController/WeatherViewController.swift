@@ -17,8 +17,15 @@ class WeatherViewController: UIViewController {
 
     let locationManager = CLLocationManager()
     var currentLocation: CLLocation!
-    var weatherViewModel: WeatherViewModel?
-    let searchBarContainerView: SearchBarContainerView = .fromNib()
+    var weatherViewModel: WeatherViewModel? {
+        didSet {
+            DispatchQueue.main.async { [weak self] in
+                self?.reloadWeatherUI()
+                self?.searchBarContainerView.searchButton.menu = self?.createContextMenu()
+            }
+        }
+    }
+    
     var weatherService: WeatherServiceProtocol = LiveWeatherService(networkService: LiveNetworkService())
     
     // MARK: - UI
@@ -29,7 +36,7 @@ class WeatherViewController: UIViewController {
         noDataView.setupSelectLocatin()
         return noDataView
     }()
-
+    let searchBarContainerView: SearchBarContainerView = .fromNib()
 
     // MARK: - Lift Cycle
 
@@ -41,33 +48,36 @@ class WeatherViewController: UIViewController {
         requestLocationAccess()
     }
 
-    func setupView() {
+    private func setupView() {
         showNoDataView()
-        self.navigationController?.isNavigationBarHidden = false
-
-//        self.navigationController
-        
+        self.navigationController?.isNavigationBarHidden = true
         tableView.dataSource = self
-        tableView.tableHeaderView = searchBarContainerView
-        
-        
-        searchBarContainerView.topAnchor.constraint(
-            equalTo: view.safeAreaLayoutGuide.topAnchor,
-            constant: 0
-        )
-        
-        searchBarContainerView.leadingAnchor.constraint(
-            equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-            constant: 0
-        )
-        
-        searchBarContainerView.trailingAnchor.constraint(
-            equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-            constant: 0
-        )
-        searchBarContainerView.delegate = self
-        searchBarContainerView.bind(with: weatherViewModel)
+        addSearchBar()
         Reachability.shared.startMonitoring()
+    }
+    
+    private func addSearchBar() {
+        searchBarContainerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchBarContainerView)
+        view.bringSubviewToFront(searchBarContainerView)
+        let searchBarConstrants = [
+            searchBarContainerView.topAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.topAnchor,
+                constant: 0
+            ),
+            searchBarContainerView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 0
+            ),
+            searchBarContainerView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: 0
+            )
+        ]
+        NSLayoutConstraint.activate(searchBarConstrants)
+        searchBarContainerView.delegate = self
+//        searchBarContainerView.bind(with: weatherViewModel)
+        searchBarContainerView.searchButton.menu = createContextMenu()
     }
 }
 
@@ -114,8 +124,8 @@ extension WeatherViewController: UITableViewDataSource {
         _: IndexPath
     ) -> UITableViewCell {
         guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.WeatherCellId
-        ) else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.WeatherCellID)
+        else {
             return UITableViewCell()
         }
         let weatherView = cell.contentView.viewWithTag(1) as! WeatherView
@@ -130,6 +140,7 @@ extension WeatherViewController: UITableViewDataSource {
 // MARK: - CLLocationManagerDelegate
 
 extension WeatherViewController: CLLocationManagerDelegate {
+    
     /// handle Location after received from Location Manager
     /// - Parameter location: Location
     func performLocationUpdate(location: CLLocation?) {
@@ -144,7 +155,6 @@ extension WeatherViewController: CLLocationManagerDelegate {
                     switch weatherServiceResult {
                     case let .success(weather):
                         self.weatherViewModel = WeatherViewModel(weatherModel: weather)
-                        self.reloadWeatherUI()
                     case let .failure(_):
                         break
                     }
@@ -218,7 +228,6 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
                     switch weatherServiceResult {
                     case let .success(weather):
                         self.weatherViewModel = WeatherViewModel(weatherModel: weather)
-                        self.reloadWeatherUI()
                     case let .failure(_):
                         break
                     }
@@ -244,8 +253,9 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
         guard
             let historyList = HistoryProvider.readWeatherHistory()
         else {
-            let noHisotryAction = UIAction(title: AppMessages.NoWeatherHistoryMessage, image: UIImage(systemName: "list.number")) { _ in
-            }
+            let noHisotryAction = UIAction(
+                title: AppMessages.NoWeatherHistoryMessage,
+                image: UIImage(systemName: "list.number")) { _ in }
             return UIMenu(
                 title: AppMessages.WeatherHistoryTitle,
                 image: nil,
@@ -259,14 +269,24 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
             UIAction(
                 title: weather.name!,
                 identifier: UIAction.Identifier("HistoryMenu\(index + 1)")
-            ) { action in
-                self.weatherViewModel?.weatherModelObserver.value = weather
+            ) { [weak self] action in
+                guard let self = self else { return }
+                self.weatherService.fetchLocationWeather(
+                    location: weather.name!,
+                    completion: {[weak self] weatherServiceResult in
+                        guard let self = self else { return }
+                        switch weatherServiceResult {
+                        case let .success(weather):
+                            self.weatherViewModel = WeatherViewModel(weatherModel: weather)
+                        case let .failure(_):
+                            break
+                        }
+                })
             }
         }
 
-        // Add Clear History Action
+    
         var removeRatingAttributes = UIMenuElement.Attributes.destructive
-        // enable or disable action based on the count
         if historyList.count == 0 {
             removeRatingAttributes.insert(.disabled)
         }
@@ -276,7 +296,8 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
             image: deleteImage,
             identifier: UIAction.Identifier("ClearHisotyr"),
             attributes: removeRatingAttributes
-        ) { _ in
+        ) { [weak self] _ in
+            guard let self = self else { return }
             HistoryProvider.clearWeatherHistory()
             self.searchBarContainerView.searchButton.menu = self.createContextMenu()
         }
@@ -285,7 +306,8 @@ extension WeatherViewController: SearchBarContainerViewDelegate {
         return UIMenu(
             title: AppMessages.WeatherHistoryTitle,
             image: UIImage(systemName: "list.number"),
-            identifier: .edit, options: .singleSelection,
+            identifier: .edit,
+            options: .singleSelection,
             children: menuList
         )
     }

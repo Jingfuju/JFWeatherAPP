@@ -111,6 +111,7 @@ final class LiveWeatherService: NSObject, WeatherServiceProtocol {
             case let .success(dataObject):
                 do {
                     let weatherModel = try self.decoder.decode(Weather.self, from: dataObject)
+                    HistoryProvider.writeWeatherHistory(weather: weatherModel)
                     completion(.success(weatherModel))
                 } catch {
                     do {

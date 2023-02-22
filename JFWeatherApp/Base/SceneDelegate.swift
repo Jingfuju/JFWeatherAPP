@@ -20,8 +20,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        
-        let storyboard = UIStoryboard(name: String(describing: WeatherView.self), bundle: nil)
         let navigationViewController = UINavigationController()
         mainCoordinator = MainCoordinator(presenter: navigationViewController)
         mainCoordinator?.start()

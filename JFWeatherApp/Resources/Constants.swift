@@ -11,7 +11,7 @@ struct Constants {
     static let LoadingIndicatorTag = 961_942
     static let NodataViewSize = 200
     static let AnimationDuration = 0.25
-    static let WeatherCellId = "MyWeatherCell"
+    static let WeatherCellID = "MyWeatherCell"
     static let MaxHistoryCount = 5
 }
 

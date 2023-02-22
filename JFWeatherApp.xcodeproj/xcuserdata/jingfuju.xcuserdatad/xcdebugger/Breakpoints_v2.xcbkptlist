@@ -131,16 +131,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "423C57F2-91CC-4C18-A4FC-6B658E413984"
+            uuid = "B8E67B6B-7F19-47F0-887C-69F05BBDCC67"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "JFWeatherApp/ViewController/WeatherViewController.swift"
+            filePath = "JFWeatherApp/View/SearchBarContainerView/SearchBarContainerView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
-            landmarkName = "createContextMenu()"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "bind(with:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

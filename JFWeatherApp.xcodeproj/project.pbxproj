@@ -17,8 +17,8 @@
 		A51E333029A5415600B9123B /* LiveWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51E332F29A5415600B9123B /* LiveWeatherService.swift */; };
 		A51E333229A565D500B9123B /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51E333129A565D500B9123B /* NetworkService.swift */; };
 		A51E333429A5A44A00B9123B /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51E333329A5A44A00B9123B /* MainCoordinator.swift */; };
+		A51E333629A5E72F00B9123B /* HistoryProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51E333529A5E72F00B9123B /* HistoryProvider.swift */; };
 		A54A5D2329A51407009D4E15 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54A5D2229A51407009D4E15 /* Weather.swift */; };
-		FE0E08F1299B1E6C00EFD79B /* HistoryProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0E08F0299B1E6C00EFD79B /* HistoryProvider.swift */; };
 		FE226D492997B6A800BF4095 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE226D482997B6A800BF4095 /* Location.swift */; };
 		FE2C28412997733400128C14 /* SearchBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2C28402997733400128C14 /* SearchBarContainerView.swift */; };
 		FE69B55E299A37B10088A1C2 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE69B55D299A37B00088A1C2 /* Reachability.swift */; };
@@ -67,8 +67,8 @@
 		A51E332F29A5415600B9123B /* LiveWeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveWeatherService.swift; sourceTree = "<group>"; };
 		A51E333129A565D500B9123B /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		A51E333329A5A44A00B9123B /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		A51E333529A5E72F00B9123B /* HistoryProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryProvider.swift; sourceTree = "<group>"; };
 		A54A5D2229A51407009D4E15 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
-		FE0E08F0299B1E6C00EFD79B /* HistoryProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryProvider.swift; sourceTree = "<group>"; };
 		FE226D482997B6A800BF4095 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		FE2C28402997733400128C14 /* SearchBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarContainerView.swift; sourceTree = "<group>"; };
 		FE69B55D299A37B00088A1C2 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -257,9 +257,9 @@
 		FEA4102B2994B3C3000E7237 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				FE0E08F0299B1E6C00EFD79B /* HistoryProvider.swift */,
 				A51E332F29A5415600B9123B /* LiveWeatherService.swift */,
 				A51E333129A565D500B9123B /* NetworkService.swift */,
+				A51E333529A5E72F00B9123B /* HistoryProvider.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -450,10 +450,10 @@
 				FE69B55E299A37B10088A1C2 /* Reachability.swift in Sources */,
 				FE226D492997B6A800BF4095 /* Location.swift in Sources */,
 				FE84D8FA2995419700758E35 /* UIView+Loading.swift in Sources */,
-				FE0E08F1299B1E6C00EFD79B /* HistoryProvider.swift in Sources */,
 				A512F05829A44F3500AE62EA /* WeatherView.swift in Sources */,
 				A51E333429A5A44A00B9123B /* MainCoordinator.swift in Sources */,
 				A512F05329A4413A00AE62EA /* AppDelegate.swift in Sources */,
+				A51E333629A5E72F00B9123B /* HistoryProvider.swift in Sources */,
 				FE2C28412997733400128C14 /* SearchBarContainerView.swift in Sources */,
 				FE84D8FD2995431B00758E35 /* NoDataView.swift in Sources */,
 				A54A5D2329A51407009D4E15 /* Weather.swift in Sources */,

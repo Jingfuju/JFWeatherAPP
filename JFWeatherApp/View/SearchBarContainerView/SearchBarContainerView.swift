@@ -34,6 +34,8 @@ class SearchBarContainerView: UIView {
         }
     }
 
+    // MARK: - Property
+    
     weak var delegate: SearchBarContainerViewDelegate?
 
     
