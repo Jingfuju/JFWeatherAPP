@@ -15,11 +15,11 @@ class WeatherViewController: UIViewController {
     
     @IBOutlet var tableView: UITableView!
     
-    private lazy var noDataView: NoDataView = {
-        let noDataView: NoDataView = Bundle.main.loadNibNamed("NoDataView", owner: self, options: nil)?.first as! NoDataView
-        noDataView.center = view.center
-        noDataView.setupSelectLocatin()
-        return noDataView
+    private lazy var EmptyStateView: EmptyStateView = {
+        let EmptyStateView: EmptyStateView = Bundle.main.loadNibNamed("EmptyStateView", owner: self, options: nil)?.first as! EmptyStateView
+        EmptyStateView.center = view.center
+        EmptyStateView.setupSelectLocatin()
+        return EmptyStateView
     }()
     
     private lazy var searchBar: UISearchBar = {
@@ -65,7 +65,7 @@ class WeatherViewController: UIViewController {
     }
 
     private func setupView() {
-        showNoDataView()
+        showEmptyStateView()
         configureNavigationBar()
         tableView.dataSource = self
         Reachability.shared.startMonitoring()
@@ -111,13 +111,13 @@ private extension WeatherViewController {
         }
     }
 
-    private func showNoDataView() {
-        view.addSubview(noDataView)
-        view.bringSubviewToFront(noDataView)
+    private func showEmptyStateView() {
+        view.addSubview(EmptyStateView)
+        view.bringSubviewToFront(EmptyStateView)
     }
 
-    private func hideNoDataView() {
-        noDataView.removeFromSuperview()
+    private func hideEmptyStateView() {
+        EmptyStateView.removeFromSuperview()
     }
     
     private func closeKeyboard(isClear: Bool) {
@@ -228,10 +228,10 @@ private extension WeatherViewController {
     
     private func reloadWeatherUI() {
         if weatherViewModel != nil {
-            hideNoDataView()
+            hideEmptyStateView()
             closeKeyboard(isClear: true)
         } else {
-            showNoDataView()
+            showEmptyStateView()
         }
         tableView.reloadData()
     }

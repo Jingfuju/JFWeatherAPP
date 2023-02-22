@@ -1,14 +1,14 @@
 //
-//  NoDataView.swift
-//  AUWeatherApp
+//  EmptyStateView.swift
+//  JFWeatherApp
 //
-//  Created by Anand Upadhyay on 09/02/23.
+//  Created by Jingfu Ju on 2/22/23.
 //
 
 import Foundation
 import UIKit
 
-class NoDataView: UIView {
+class EmptyStateView: UIView {
     
     // MARK: - IBOutlet
 
@@ -26,7 +26,7 @@ class NoDataView: UIView {
     
     // MARK: - Methods
     
-    func setupNoDataView() {
+    func setupEmptyStateView() {
         contentView.removeFromSuperview()
         addSubview(contentView)
         noDataLabel.text = AppMessages.noLocationFound
@@ -46,3 +46,4 @@ class NoDataView: UIView {
         addSubview(contentView)
     }
 }
+
