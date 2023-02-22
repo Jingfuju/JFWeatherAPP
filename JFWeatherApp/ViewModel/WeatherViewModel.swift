@@ -16,14 +16,15 @@ private var dateFormatter: DateFormatter = {
     return dateFormatter
 }()
 
-class WeatherViewModel {
-    
-    
+
+
+final class WeatherViewModel {
     
     // MARK: - Properties
     
-    private let weatherModel: Weather
+    private let imageURLString = "https://openweathermap.org/img/wn/"
     
+    private let weatherModel: Weather
     var cityLabelText: String
     var countryLabelText:  String
     var commentLabelText:  String
@@ -33,12 +34,10 @@ class WeatherViewModel {
     var weatherDescriptionLabelText:  String
     var temperatureLabelText: String
     var weatherImageURLString: String
+
+//    let weatherModelObserver: AppObserver<Weather?> = AppObserver(nil)
     
-    // create observers
-    var locationObserver: AppObserver<String> = AppObserver("")
-    let weatherModelObserver: AppObserver<Weather?> = AppObserver(nil)
     
-    private let imageURLString = "https://openweathermap.org/img/wn/"
     
     // MARK: - Initializer
     
@@ -46,7 +45,7 @@ class WeatherViewModel {
         weatherModel: Weather
     ) {
         self.weatherModel = weatherModel
-        weatherModelObserver.value = weatherModel
+//        weatherModelObserver.value = weatherModel
         
         cityLabelText = weatherModel.name ?? ""
         countryLabelText = weatherModel.sys?.country ?? ""

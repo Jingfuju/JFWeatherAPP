@@ -42,7 +42,7 @@ protocol NetworkServiceProtocol {
     
     /**
             
-            Network call base on the URLSession.
+            Network call protocol.
      
      - Parameters:
         - query: the String value representing the URL to the server end point.

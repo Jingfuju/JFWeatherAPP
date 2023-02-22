@@ -11,24 +11,9 @@ import UIKit
 
 class WeatherViewController: UIViewController {
     
+    // MARK: - Outlets && UI
+    
     @IBOutlet var tableView: UITableView!
-
-    // MARK: - Private Properties
-
-    let locationManager = CLLocationManager()
-    var currentLocation: CLLocation!
-    var weatherViewModel: WeatherViewModel? {
-        didSet {
-            DispatchQueue.main.async { [weak self] in
-                self?.reloadWeatherUI()
-                self?.rightBarButtonItem.menu = self?.createContextMenu()
-            }
-        }
-    }
-    
-    var weatherService: WeatherServiceProtocol = LiveWeatherService(networkService: LiveNetworkService())
-    
-    // MARK: - UI
     
     private lazy var noDataView: NoDataView = {
         let noDataView: NoDataView = Bundle.main.loadNibNamed("NoDataView", owner: self, options: nil)?.first as! NoDataView
@@ -56,6 +41,19 @@ class WeatherViewController: UIViewController {
         return item
     }()
 
+    // MARK: - Private Properties
+
+    private let locationManager = CLLocationManager()
+    private var weatherViewModel: WeatherViewModel? {
+        didSet {
+            DispatchQueue.main.async { [weak self] in
+                self?.reloadWeatherUI()
+                self?.rightBarButtonItem.menu = self?.createContextMenu()
+            }
+        }
+    }
+    private var weatherService: WeatherServiceProtocol = LiveWeatherService(networkService: LiveNetworkService())
+    
     // MARK: - Lift Cycle
 
     override func viewDidLoad() {
@@ -64,7 +62,6 @@ class WeatherViewController: UIViewController {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         requestLocationAccess()
-        
     }
 
     private func setupView() {
@@ -129,6 +126,42 @@ private extension WeatherViewController {
             searchBar.text = ""
         }
     }
+    
+    private func requestLocationAccess() {
+        if locationManager.authorizationStatus == .authorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+        } else {
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    /**
+     
+        Handle Location after received from Location Manager.
+     
+        - Parameter location: optional CLLocation
+     
+     */
+    private func updateWeather(of location: CLLocation?) {
+        if let location = location {
+            User.Location.shared.latitude = location.coordinate.latitude
+            User.Location.shared.longitude = location.coordinate.longitude
+            
+            weatherService.fetchCoordinateWeather(
+                coordinate: User.Location.shared,
+                completion: { [weak self] weatherServiceResult in
+                    guard let self = self else { return }
+                    switch weatherServiceResult {
+                    case let .success(weather):
+                        self.weatherViewModel = WeatherViewModel(weatherModel: weather)
+                    case let .failure(_):
+                        break
+                    }
+                }
+            )
+        }
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -138,9 +171,7 @@ extension WeatherViewController: UITableViewDataSource {
         _: UITableView,
         numberOfRowsInSection _: Int) -> Int
     {
-        if weatherViewModel?.weatherModelObserver.value?.weather != nil {
-            return 1
-        } else { return 0 }
+        return weatherViewModel != nil ?  1 : 0
     }
 
     func tableView(
@@ -164,38 +195,6 @@ extension WeatherViewController: UITableViewDataSource {
 // MARK: - CLLocationManagerDelegate
 
 extension WeatherViewController: CLLocationManagerDelegate {
-    
-    /// handle Location after received from Location Manager
-    /// - Parameter location: Location
-    func performLocationUpdate(location: CLLocation?) {
-        if let location = location {
-            User.Location.shared.latitude = location.coordinate.latitude
-            User.Location.shared.longitude = location.coordinate.longitude
-            
-            weatherService.fetchCoordinateWeather(
-                coordinate: User.Location.shared,
-                completion: { [weak self] weatherServiceResult in
-                    guard let self = self else { return }
-                    switch weatherServiceResult {
-                    case let .success(weather):
-                        self.weatherViewModel = WeatherViewModel(weatherModel: weather)
-                    case let .failure(_):
-                        break
-                    }
-                }
-            )
-        }
-    }
-
-    func requestLocationAccess() {
-        if locationManager.authorizationStatus == .authorizedWhenInUse {
-            locationManager.startUpdatingLocation()
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.startUpdatingLocation()
-        }
-    }
-
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .notDetermined:
@@ -209,36 +208,31 @@ extension WeatherViewController: CLLocationManagerDelegate {
         }
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // Some location updates can be invalid or have insufficient accuracy.
-        // Find the first location that has sufficient horizontal accuracy.
-        // If the manager's desiredAccuracy is one of kCLLocationAccuracyNearestTenMeters,
-        // kCLLocationAccuracyHundredMeters, kCLLocationAccuracyKilometer, or kCLLocationAccuracyThreeKilometers
-        // then you can use $0.horizontalAccuracy <= manager.desiredAccuracy. Otherwise enter the number of meters desired.
-        if let location = locations.first(where: { $0.horizontalAccuracy <= 50 }) {
-            performLocationUpdate(location: locationManager.location)
-            // stop updating Location if you don't need any more updates
-            manager.stopUpdatingLocation()
-        } else {
-            showAlert(message: AppMessages.noLocationFound)
-        }
-    }
-
     internal func locationManager(
         _: CLLocationManager,
         didFailWithError error: Error
     ) {
         showAlert(message: error.localizedDescription)
     }
+    
+    func locationManager(
+        _ manager: CLLocationManager,
+        didUpdateLocations locations: [CLLocation]
+    ) {
+        if let location = locations.first(where: { $0.horizontalAccuracy <= 50 }) {
+            updateWeather(of: location)
+            manager.stopUpdatingLocation()
+        } else {
+            showAlert(message: AppMessages.noLocationFound)
+        }
+    }
+    
+    
 }
 
 // MARK: - LocationInputProtocol
 
 extension WeatherViewController {
-    
-    func userSelectedMyLocation() {
-        requestLocationAccess()
-    }
 
     func userSearchedLocation(location: String) {
         locationManager.stopUpdatingLocation()
@@ -261,7 +255,7 @@ extension WeatherViewController {
     }
     
     func reloadWeatherUI() {
-        if weatherViewModel?.weatherModelObserver.value?.weather != nil {
+        if weatherViewModel != nil {
             hideNoDataView()
             closeKeyboard(isClear: true)
         } else {
