@@ -47,12 +47,4 @@ final class WeatherAppUITest: XCTestCase {
             XCTAssertTrue(table.exists)
         }
     }
-
-    func test_deviceOrienation() {
-        XCTContext.runActivity(
-            named: "device orientation"
-        ) { _ in
-            XCUIDevice.shared.orientation = .landscapeLeft
-        }
-    }
 }

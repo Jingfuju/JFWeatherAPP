@@ -1,4 +1,5 @@
-# AUWeatherApp
+# JFWeatherApp
+
 *Weather App to Show User Options to input Location in various ways and show weather at the user's selected location.*
 
 ### Open Weather
@@ -29,16 +30,19 @@
 
 
 **How to Run**
+
 - Xcode 13.2.1 or Above
-- Supported iOS 15.2 and above
+- Supported iOS 15.0 and above:
+    UIMenu is only supported at the iOS 14.0 above, the singleSelection for UIMenu start to support when 15.0
 - Download Code or Clone the repository: [https://docs.github.com/en/repositories/creating-and-managing-repositories/deleting-a-repository]
 - Open Project in Xcode
 - Run on Simulator
   - Set Simulator as run device
   - Build and Run the App
-  - To Simulate My Location on Simulator - On Simulator Menus select -> Features -> Location -> Custom Location -> add Lat :52.531677 and Lon :13.381777 
+  - To Simulate My Location on Simulator:
+         On Simulator Menus select -> Features -> Location -> Custom Location -> add Lat :52.531677 and Lon :13.381777 
 - Run on Real Device 
-  - Under Project -> Targets -> Select AUWeatherApp -> Signing & Capabilities -> Select Team and Check Automatically Manage Signing
+  - Under Project -> Targets -> Select JFWeatherApp -> Signing & Capabilities -> Select Team and Check Automatically Manage Signing
   - Build and Run app on device
 
 
