@@ -5,8 +5,6 @@
 ### Open Weather
  - https://openweathermap.org/current
 
-![ScreenShot](https://user-images.githubusercontent.com/9990064/218646403-65f47a6d-1de2-4bad-bc1b-f05690df9187.png)
-
 
 ### Features
 - Allow User to select Locations from various Options
@@ -33,8 +31,8 @@
 
 - Xcode 13.2.1 or Above
 - Supported iOS 15.0 and above:
-    UIMenu is only supported at the iOS 14.0 above, the singleSelection for UIMenu start to support when 15.0
-- Download Code or Clone the repository: [https://docs.github.com/en/repositories/creating-and-managing-repositories/deleting-a-repository]
+    Note: UIMenu is only supported at the iOS 14.0 above, the singleSelection for UIMenu start to support when 15.0
+- Download Code or Clone the repository: 
 - Open Project in Xcode
 - Run on Simulator
   - Set Simulator as run device
