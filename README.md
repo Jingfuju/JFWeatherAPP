@@ -1,20 +1,24 @@
-# JFWeatherApp
+# 🍏 JFWeatherApp
 
 *Weather App to Show User Options to input Location in various ways and show weather at the user's selected location.*
 
-### Open Weather
+### 🌵 Open Weather
+
+ the backend is supported by the open weather API. 
  - https://openweathermap.org/current
+ 
+## 📘 Summary 
 
+1. A native-app-based application to serve as a basic weather app.
+2. Allow customers to enter a US city
+3. Call the openweathermap.org API and display the information I though a user would be interested in seeing
+4. Support display a weather icon, caching is supported. 
+5. Auto-load the last city searched upon app launch.
+6. Ask the User for location access, If the User gives permission to access the location, then retrieve weather data by default.
 
-### Features
-- Allow User to select Locations from various Options
-  - My: User's Current Location
-  - Search Location: User can type in to search location
-  - City: User can view the list of cities and search/select from the list
-  - History: User can view History of upto last 5 searches made
-- No Location Found alert and Indicator on Main Screen
-- Allow User to Clear history
-
+Extra Main Feature:
+- Have the self-implemented latest recently used cache data structure to handle the search history with at most 5 items capacity. 
+- Levarage the newly introduce UIMenu (iOS 14.0) to handle the city history list on same page. 
 
 **Highlights**
 - Runs on iPhone / ipad
@@ -25,6 +29,38 @@
 - Well Documented Code
 - Unit and UI Test cases
 - No Thir party Libraries Used
+
+ 
+## 🪵 Design
+
+- Leverage the Model-View-ViewModel (MVVM) architecture as the backbone of the application. 
+- Pull out the basic mechanism logic from fat UIViewController and generate the network layer class and data layer class. This part is based on the dependency injection to faciliate the UI and unit tests. 
+- Even though we used the MVVM to make the code more testable and decopuled, the navigation will still be the pain point when introducing more features to the application. So, the coordinator design pattern should be future navigation problem killer for small to medium size project, like our JFWeatherAPP. 
+
+
+## 🐝 TODO:
+
+- Accessiblity should be centralized. 
+- Need locaization files. 
+- User singleton could be used for the futurn app level configuration but making sure leveraging the dependency injection to faciliate the testing. 
+- more UI/Unit test coverage. 
+- More Error handing cases. 
+
+
+
+
+API call
+The application is supported by the API version 2.5. We will bump up the versionn to 3.0 (lasted one) soon. 
+
+https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+https://api.openweathermap.org/data/2.5/weather?q={city name},{country code}&appid={API key}
+https://api.openweathermap.org/data/2.5/weather?q={city name},{state code},{country code}&appid={API key}
+
+
+
+
+
+
 
 
 **How to Run**
