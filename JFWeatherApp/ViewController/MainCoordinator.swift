@@ -25,9 +25,11 @@ extension Coordinator {
 }
 
 
+// TODO: - When the application get more complex, MainCoordinator should be the place to handle the Navigation.
 protocol MainCoordinatorDelegate {
     
 }
+
 
 final class MainCoordinator: Coordinator {
     

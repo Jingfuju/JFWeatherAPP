@@ -118,6 +118,15 @@
 			path = Fixtures;
 			sourceTree = "<group>";
 		};
+		A51E335929A6EEDE00B9123B /* DataService */ = {
+			isa = PBXGroup;
+			children = (
+				A51E333529A5E72F00B9123B /* HistoryProvider.swift */,
+				A51E332F29A5415600B9123B /* LiveWeatherService.swift */,
+			);
+			path = DataService;
+			sourceTree = "<group>";
+		};
 		A5B1283929A40F52000C7DFC /* Base */ = {
 			isa = PBXGroup;
 			children = (
@@ -139,6 +148,7 @@
 		A5B1283F29A41221000C7DFC /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				A51E333329A5A44A00B9123B /* MainCoordinator.swift */,
 				A512F05029A4148600AE62EA /* WeatherViewController.swift */,
 			);
 			path = ViewController;
@@ -188,11 +198,11 @@
 			isa = PBXGroup;
 			children = (
 				A5B1283929A40F52000C7DFC /* Base */,
+				A51E335929A6EEDE00B9123B /* DataService */,
 				FEA4102A2994B3AE000E7237 /* Helper */,
 				FEA410072994B38A000E7237 /* Info.plist */,
-				A51E333329A5A44A00B9123B /* MainCoordinator.swift */,
 				FEA410302994B404000E7237 /* Model */,
-				FEA4102B2994B3C3000E7237 /* Networking */,
+				FEA4102B2994B3C3000E7237 /* NetworkService */,
 				A5B1283A29A40F8E000C7DFC /* Resources */,
 				FEA4102E2994B3E5000E7237 /* View */,
 				A5B1283F29A41221000C7DFC /* ViewController */,
@@ -228,14 +238,12 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		FEA4102B2994B3C3000E7237 /* Networking */ = {
+		FEA4102B2994B3C3000E7237 /* NetworkService */ = {
 			isa = PBXGroup;
 			children = (
-				A51E332F29A5415600B9123B /* LiveWeatherService.swift */,
 				A51E333129A565D500B9123B /* NetworkService.swift */,
-				A51E333529A5E72F00B9123B /* HistoryProvider.swift */,
 			);
-			path = Networking;
+			path = NetworkService;
 			sourceTree = "<group>";
 		};
 		FEA4102E2994B3E5000E7237 /* View */ = {
