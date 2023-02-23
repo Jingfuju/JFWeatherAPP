@@ -2,12 +2,11 @@
 
 *Weather App to Show User Options to input Location in various ways and show weather at the user's selected location.*
 
-### 🌵 Open Weather
-
- the backend is supported by the open weather API. 
- - https://openweathermap.org/current
  
 ## 📘 Summary 
+
+the API call is supported by the open weather API. 
+ - https://openweathermap.org/current
 
 1. A native-app-based application to serve as a basic weather app.
 2. Allow customers to enter a US city
@@ -16,11 +15,13 @@
 5. Auto-load the last city searched upon app launch.
 6. Ask the User for location access, If the User gives permission to access the location, then retrieve weather data by default.
 
-Extra Main Feature:
+**Extra Main Feature**
+
 - Have the self-implemented latest recently used cache data structure to handle the search history with at most 5 items capacity. 
 - Levarage the newly introduce UIMenu (iOS 14.0) to handle the city history list on same page. 
 
 **Highlights**
+
 - Runs on iPhone / ipad
 - Supports Portrait and Landscape Orientation
 - Support Dark and Light Appearance
@@ -38,6 +39,16 @@ Extra Main Feature:
 - Even though we used the MVVM to make the code more testable and decopuled, the navigation will still be the pain point when introducing more features to the application. So, the coordinator design pattern should be future navigation problem killer for small to medium size project, like our JFWeatherAPP. 
 
 
+*API call*
+The application is supported by the API version 2.5. We will bump up the versionn to 3.0 (lasted one) soon. 
+
+https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+
+https://api.openweathermap.org/data/2.5/weather?q={city name},{country code}&appid={API key}
+
+https://api.openweathermap.org/data/2.5/weather?q={city name},{state code},{country code}&appid={API key}
+
+
 ## 🐝 TODO:
 
 - Accessiblity should be centralized. 
@@ -47,23 +58,15 @@ Extra Main Feature:
 - More Error handing cases. 
 
 
+## 🎥 User Interface (UI)
+
+| Normal Mode | Dark Mode |
+| --- | --- |
+| ![Screenshot 2023-02-22 at 4 55 08 PM](https://user-images.githubusercontent.com/8815608/220801139-33dd4f15-8418-4672-9b72-ae78dfe07e89.png)] | ![Screenshot 2023-02-22 at 4 55 41 PM](https://user-images.githubusercontent.com/8815608/220801158-ab1af7ef-86a7-43ce-b202-a7eb9c86bfbb.png) |
+| ![Screenshot 2023-02-22 at 4 55 18 PM](https://user-images.githubusercontent.com/8815608/220801184-09817070-34a7-42b5-8761-b53adcc6bdfd.png) | ![Screenshot 2023-02-22 at 4 55 49 PM](https://user-images.githubusercontent.com/8815608/220801204-364a18c7-eb9c-44c7-b475-5d61e74cafaa.png) |
 
 
-API call
-The application is supported by the API version 2.5. We will bump up the versionn to 3.0 (lasted one) soon. 
-
-https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-https://api.openweathermap.org/data/2.5/weather?q={city name},{country code}&appid={API key}
-https://api.openweathermap.org/data/2.5/weather?q={city name},{state code},{country code}&appid={API key}
-
-
-
-
-
-
-
-
-**How to Run**
+## 🦁 How to Run 
 
 - Xcode 13.2.1 or Above
 - Supported iOS 15.0 and above:
