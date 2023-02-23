@@ -29,14 +29,16 @@ the API call is supported by the open weather API.
 - Dynamic Type Support
 - Well Documented Code
 - Unit and UI Test cases
-- No Thir party Libraries Used
+- No Third party Libraries Used
 
  
 ## 🪵 Design
 
 - Leverage the Model-View-ViewModel (MVVM) architecture as the backbone of the application. 
 - Pull out the basic mechanism logic from fat UIViewController and generate the network layer class and data layer class. This part is based on the dependency injection to faciliate the UI and unit tests. 
-- Even though we used the MVVM to make the code more testable and decopuled, the navigation will still be the pain point when introducing more features to the application. So, the coordinator design pattern should be future navigation problem killer for small to medium size project, like our JFWeatherAPP. 
+- Even though we used the MVVM to make the code more testable and decopuled, the navigation will still be the pain point when introducing more features to the application. 
+Moving the navigation function out to make sure the application more SOLID, to be specifi, more Single Responsibility.  
+So, the coordinator design pattern should be future navigation problem killer for small to medium size project, like our JFWeatherAPP. 
 
 
 *API call*
