@@ -49,6 +49,9 @@ https://api.openweathermap.org/data/2.5/weather?q={city name},{country code}&app
 https://api.openweathermap.org/data/2.5/weather?q={city name},{state code},{country code}&appid={API key}
 
 
+Reference: 
+[https://docs.github.com/en/repositories/creating-and-managing-repositories/deleting-a-repository](https://github.com/anandgupadhyay/AUWeatherApp?ref=iosexample.com)
+
 ## 🐝 TODO:
 
 - Accessiblity should be centralized. 
@@ -64,6 +67,12 @@ https://api.openweathermap.org/data/2.5/weather?q={city name},{state code},{coun
 | --- | --- |
 | ![Screenshot 2023-02-22 at 4 55 08 PM](https://user-images.githubusercontent.com/8815608/220801139-33dd4f15-8418-4672-9b72-ae78dfe07e89.png)] | ![Screenshot 2023-02-22 at 4 55 41 PM](https://user-images.githubusercontent.com/8815608/220801158-ab1af7ef-86a7-43ce-b202-a7eb9c86bfbb.png) |
 | ![Screenshot 2023-02-22 at 4 55 18 PM](https://user-images.githubusercontent.com/8815608/220801184-09817070-34a7-42b5-8761-b53adcc6bdfd.png) | ![Screenshot 2023-02-22 at 4 55 49 PM](https://user-images.githubusercontent.com/8815608/220801204-364a18c7-eb9c-44c7-b475-5d61e74cafaa.png) |
+
+History List lasted recently used (LRU) cache. sorted from latest to older one. 
+
+| If limit is reached, remove the item from bottom | If item been search again, move it to top | selection will update weather UI and make it to top |
+| --- | --- | --- |
+| ![ezgif com-video-to-gif](https://user-images.githubusercontent.com/8815608/220802916-91edf224-1386-4e3c-a0be-3b2bcc341cd7.gif) | ![ezgif com-video-to-gif copy](https://user-images.githubusercontent.com/8815608/220802942-a9327666-4836-4c01-863f-fea8824808af.gif) | ![ezgif com-video-to-gif copy 2](https://user-images.githubusercontent.com/8815608/220802967-fa48fc84-57fc-4b8d-8c3b-995d7e58c075.gif) |
 
 
 ## 🦁 How to Run 
