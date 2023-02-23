@@ -30,6 +30,8 @@ class WeatherViewController: UIViewController {
         return searchBar
     }()
     
+    //TODO: - Need A11y file to handle the accessibilityIdentifier centralized.
+    
     private lazy var rightBarButtonItem: UIBarButtonItem = {
         let item = UIBarButtonItem(
             image: UIImage(systemName: "list.number"),
@@ -37,6 +39,7 @@ class WeatherViewController: UIViewController {
             target: self,
             action: nil
         )
+        item.accessibilityIdentifier = "HistoryButton"
         item.menu = createContextMenu()
         return item
     }()
@@ -282,13 +285,14 @@ private extension WeatherViewController {
         let clearHistory = UIAction(
             title: AppMessages.ClearHistoryTitle,
             image: deleteImage,
-            identifier: UIAction.Identifier("ClearHisotyr"),
+            identifier: UIAction.Identifier("ClearHistory"),
             attributes: removeRatingAttributes
         ) { [weak self] _ in
             guard let self = self else { return }
             HistoryProvider.clearWeatherHistory()
             self.rightBarButtonItem.menu = self.createContextMenu()
         }
+        clearHistory.accessibilityIdentifier = "ClearHistory"
         menuList.append(clearHistory)
 
         return UIMenu(
