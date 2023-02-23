@@ -32,7 +32,7 @@ class EmptyStateView: UIView {
         noDataLabel.text = AppMessages.noLocationFound
     }
 
-    func setupSelectLocatin() {
+    func setupSelectLocation() {
         contentView.removeFromSuperview()
         addSubview(contentView)
         noDataLabel.text = AppMessages.selectLocation

@@ -15,11 +15,11 @@ class WeatherViewController: UIViewController {
     
     @IBOutlet var tableView: UITableView!
     
-    private lazy var EmptyStateView: EmptyStateView = {
-        let EmptyStateView: EmptyStateView = Bundle.main.loadNibNamed("EmptyStateView", owner: self, options: nil)?.first as! EmptyStateView
-        EmptyStateView.center = view.center
-        EmptyStateView.setupSelectLocatin()
-        return EmptyStateView
+    private lazy var emptyStateView: EmptyStateView = {
+        let emptyStateView: EmptyStateView = Bundle.main.loadNibNamed("EmptyStateView", owner: self, options: nil)?.first as! EmptyStateView
+        emptyStateView.center = view.center
+        emptyStateView.setupSelectLocation()
+        return emptyStateView
     }()
     
     private lazy var searchBar: UISearchBar = {
@@ -115,12 +115,12 @@ private extension WeatherViewController {
     }
 
     private func showEmptyStateView() {
-        view.addSubview(EmptyStateView)
-        view.bringSubviewToFront(EmptyStateView)
+        view.addSubview(emptyStateView)
+        view.bringSubviewToFront(emptyStateView)
     }
 
     private func hideEmptyStateView() {
-        EmptyStateView.removeFromSuperview()
+        emptyStateView.removeFromSuperview()
     }
     
     private func closeKeyboard(isClear: Bool) {
@@ -214,8 +214,11 @@ private extension WeatherViewController {
                     switch weatherServiceResult {
                     case let .success(weather):
                         self.weatherViewModel = WeatherViewModel(weatherModel: weather)
-                    case let .failure(_):
-                        break
+                    case let .failure(error):
+                        self.weatherViewModel = nil
+                        if case let .invalidResponse(codeString) = error, codeString == "404" {
+                            self.showAlert(message: AppMessages.checkCityName)
+                        }
                     }
                 }
             )
@@ -269,7 +272,8 @@ private extension WeatherViewController {
                         switch weatherServiceResult {
                         case let .success(weather):
                             self.weatherViewModel = WeatherViewModel(weatherModel: weather)
-                        case let .failure(_):
+                        case .failure:
+                            // TODO: - searched city name, it should be fine. But we still need to handle the error here.
                             break
                         }
                 })

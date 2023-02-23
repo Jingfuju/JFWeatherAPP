@@ -10,8 +10,7 @@ import Foundation
 
 enum NetworkError: Error, LocalizedError {
     case malformedQuery
-    case invalidResponse
-
+    case invalidResponse(String)
     case other(String)
 
     var errorDescription: String? {
@@ -93,7 +92,11 @@ final class LiveNetworkService: NetworkServiceProtocol {
                 let receivedData = dataObject
             else {
                 DispatchQueue.main.async {
-                    completion(.failure(.invalidResponse))
+                    completion(
+                        .failure(
+                            .invalidResponse(String((response as? HTTPURLResponse)?.statusCode ?? -1))
+                        )
+                    )
                 }
                 return
             }

@@ -9,7 +9,7 @@ import Foundation
 
 struct Constants {
     static let LoadingIndicatorTag = 961_942
-    static let NodataViewSize = 200
+    static let emptyStateViewSize = 200
     static let AnimationDuration = 0.25
     static let WeatherCellID = "MyWeatherCell"
     static let MaxHistoryCount = 5
@@ -21,6 +21,7 @@ enum AppMessages {
     static let selectLocation: String = "Please select location"
     static let searchLocation: String = "Search for a city"
     static let noLocationFound: String = "No location found!"
+    static let checkCityName: String = "Please check the city name spelling！"
     static let Refresh: String = "Refresh"
     static let AppTitle: String = "Weather App"
     static let searchCity: String = "Search city"

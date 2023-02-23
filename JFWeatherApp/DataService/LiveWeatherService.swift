@@ -11,7 +11,7 @@ import Foundation
 enum WeatherServiceError: Swift.Error {
     case malfortedQuery
     case decodingError
-    case invalidResponse
+    case invalidResponse(String)
     case other(String)
 }
 
@@ -75,6 +75,7 @@ final class LiveWeatherService: NSObject, WeatherServiceProtocol {
         static let weatherAPIKey = "579ca2cb78c7464b12c279a722775c58"
     }
     private static let statusOK = 200
+    private static let statusPageNotFound = 404
     
     // MARK: - Properties
     
@@ -154,8 +155,8 @@ final class LiveWeatherService: NSObject, WeatherServiceProtocol {
                 switch networkServiceError {
                 case .malformedQuery:
                     completion(.failure(.malfortedQuery))
-                case .invalidResponse:
-                    completion(.failure(.invalidResponse))
+                case let .invalidResponse(code):
+                    completion(.failure(.invalidResponse(code)))
                 case let .other(localizedErrorMessage):
                     completion(.failure(.other(localizedErrorMessage)))
                 }
