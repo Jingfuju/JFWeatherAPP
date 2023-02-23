@@ -35,7 +35,7 @@ extension UIView {
         let backgroundView = UIView()
         backgroundView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         backgroundView.backgroundColor = backgroundColor
-        backgroundView.tag = Constants.LoadingIndicatorTag
+        backgroundView.tag = Constants.loadingIndicatorTag
         var activityIndicator = UIActivityIndicatorView()
         activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: backgroundView.frame.size.width, height: backgroundView.frame.size.height))
         activityIndicator.center = CGPoint(x: backgroundView.frame.size.width / 2, y: backgroundView.frame.size.height / 2)
@@ -51,7 +51,7 @@ extension UIView {
 
     /// Hide Loading Indicator
     func hideLoading() {
-        if let background = viewWithTag(Constants.LoadingIndicatorTag) {
+        if let background = viewWithTag(Constants.loadingIndicatorTag) {
             background.removeFromSuperview()
         }
         isUserInteractionEnabled = true

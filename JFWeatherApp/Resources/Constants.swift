@@ -8,11 +8,11 @@
 import Foundation
 
 struct Constants {
-    static let LoadingIndicatorTag = 961_942
+    static let loadingIndicatorTag = 961_942
     static let emptyStateViewSize = 200
-    static let AnimationDuration = 0.25
-    static let WeatherCellID = "MyWeatherCell"
-    static let MaxHistoryCount = 5
+    static let animationDuration = 0.25
+    static let weatherCellID = "MyWeatherCell"
+    static let maxHistoryCount = 5
 }
 
 // TODO: - can be better implemented with Localization
@@ -22,22 +22,22 @@ enum AppMessages {
     static let searchLocation: String = "Search for a city"
     static let noLocationFound: String = "No location found!"
     static let checkCityName: String = "Please check the city name spelling！"
-    static let Refresh: String = "Refresh"
-    static let AppTitle: String = "Weather App"
+    static let refresh: String = "Refresh"
+    static let appTitle: String = "Weather App"
     static let searchCity: String = "Search city"
-    static let WeatherHistoryTitle = "Weather History"
-    static let NoWeatherHistoryMessage = "No history found"
-    static let ClearHistoryTitle = "Clear History"
+    static let weatherHistoryTitle = "History"
+    static let noWeatherHistoryMessage = "No history found"
+    static let clearHistoryTitle = "Clear History"
 
     enum WeatherMessage: String {
-        case Winter = "❄️ Cool ❄️ Grab a Cappacino"
-        case Summer = "🌞 Its Hot 🌞 Ice-cream time"
-        case Monsoon = "🌧️ Its Raining 🌧️ Lets dance"
-        case Spring = "🌼 Relax 🌼 Ride a bike"
+        case winter = "❄️ Cool ❄️ Grab a Cappacino"
+        case summer = "🌞 Its Hot 🌞 Ice-cream time"
+        case monsoon = "🌧️ Its Raining 🌧️ Lets dance"
+        case spring = "🌼 Relax 🌼 Ride a bike"
     }
 }
 
 enum AppKeys {
-    static let WeatherList = "WeatherList"
+    static let weatherList = "WeatherList"
 }
 

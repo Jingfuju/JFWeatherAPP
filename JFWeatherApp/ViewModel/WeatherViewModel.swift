@@ -49,11 +49,11 @@ final class WeatherViewModel {
         if let temperature = weatherModel.main?.temp {
             switch temperature {
             case ...15.0:
-                message = AppMessages.WeatherMessage.Winter.rawValue
+                message = AppMessages.WeatherMessage.winter.rawValue
             case 15.1 ... 25.0:
-                message = AppMessages.WeatherMessage.Spring.rawValue
+                message = AppMessages.WeatherMessage.spring.rawValue
             case 25.1...:
-                message = AppMessages.WeatherMessage.Summer.rawValue
+                message = AppMessages.WeatherMessage.summer.rawValue
             default: break
             }
         }

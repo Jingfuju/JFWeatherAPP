@@ -47,7 +47,7 @@ class HistoryProvider {
                 }
             }
             
-            if weatherList.count == Constants.MaxHistoryCount {
+            if weatherList.count == Constants.maxHistoryCount {
                 weatherList.insert(weather, at: 0)
                 weatherList.removeLast()
             } else {
@@ -57,7 +57,7 @@ class HistoryProvider {
         
         do {
             let encodedData = try JSONEncoder().encode(weatherList)
-            userDefaults.set(encodedData, forKey: AppKeys.WeatherList)
+            userDefaults.set(encodedData, forKey: AppKeys.weatherList)
             userDefaults.synchronize()
             return true
         } catch {
@@ -77,7 +77,7 @@ class HistoryProvider {
     class func readWeatherHistory() -> [Weather]? {
         var weatherList: [Weather]
         guard
-            let savedData = UserDefaults.standard.object(forKey: AppKeys.WeatherList) as? Data
+            let savedData = UserDefaults.standard.object(forKey: AppKeys.weatherList) as? Data
         else {
             return nil
         }
@@ -96,6 +96,6 @@ class HistoryProvider {
      */
     class func clearWeatherHistory() {
         let userDefaults = UserDefaults.standard
-        userDefaults.removeObject(forKey: AppKeys.WeatherList)
+        userDefaults.removeObject(forKey: AppKeys.weatherList)
     }
 }

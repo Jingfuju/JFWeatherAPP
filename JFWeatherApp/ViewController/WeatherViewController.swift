@@ -103,7 +103,7 @@ extension WeatherViewController: UISearchBarDelegate {
 private extension WeatherViewController {
     private func showAlert(message: String) {
         let alertController = UIAlertController(
-            title: AppMessages.AppTitle,
+            title: AppMessages.appTitle,
             message: message,
             preferredStyle: .alert
         )
@@ -180,7 +180,8 @@ private extension WeatherViewController {
                     switch weatherServiceResult {
                     case let .success(weather):
                         self.weatherViewModel = WeatherViewModel(weatherModel: weather)
-                    case let .failure(_):
+                    case .failure(_):
+                        // TODO: - handle the error cases
                         break
                     }
                 }
@@ -248,10 +249,10 @@ private extension WeatherViewController {
             let historyList = HistoryProvider.readWeatherHistory()
         else {
             let noHisotryAction = UIAction(
-                title: AppMessages.NoWeatherHistoryMessage,
+                title: AppMessages.noWeatherHistoryMessage,
                 image: UIImage(systemName: "list.number")) { _ in }
             return UIMenu(
-                title: AppMessages.WeatherHistoryTitle,
+                title: AppMessages.weatherHistoryTitle,
                 image: nil,
                 identifier: .edit,
                 options: .singleSelection,
@@ -287,7 +288,7 @@ private extension WeatherViewController {
         }
         let deleteImage = UIImage(systemName: "trash.fill")
         let clearHistory = UIAction(
-            title: AppMessages.ClearHistoryTitle,
+            title: AppMessages.clearHistoryTitle,
             image: deleteImage,
             identifier: UIAction.Identifier("ClearHistory"),
             attributes: removeRatingAttributes
@@ -300,7 +301,7 @@ private extension WeatherViewController {
         menuList.append(clearHistory)
 
         return UIMenu(
-            title: AppMessages.WeatherHistoryTitle,
+            title: AppMessages.weatherHistoryTitle,
             image: UIImage(systemName: "list.number"),
             identifier: .edit,
             options: .singleSelection,
@@ -324,7 +325,7 @@ extension WeatherViewController: UITableViewDataSource {
         _: IndexPath
     ) -> UITableViewCell {
         guard
-            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.WeatherCellID)
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.weatherCellID)
         else {
             return UITableViewCell()
         }

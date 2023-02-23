@@ -44,7 +44,7 @@ class WeatherView: UIView {
     ) {
         UIView.transition(
             with: label,
-            duration: Constants.AnimationDuration,
+            duration: Constants.animationDuration,
             options: options,
             animations: { label.text = text },
             completion: nil
